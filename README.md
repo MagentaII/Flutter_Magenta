@@ -39,11 +39,11 @@ To get started with this project, follow these steps:
 
 ## Packages
 
-### Dependencies
+#### Dependencies
 
 - `cupertino_icons: ^1.0.6`
 
-### Dev Dependencies
+#### Dev Dependencies
 
 - `flutter_lints: ^3.0.0`
 
