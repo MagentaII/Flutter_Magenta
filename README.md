@@ -59,13 +59,17 @@ flutter_magenta
     |-- flutter_weather/
       |-- blocs/
       |-- views/
+        |-- weather_search_view.dart
     |-- github_search/
       |-- blocs/
       |-- views/
+        |-- github_search_view.dart
     |-- home/
       |-- blocs/
       |-- views/
         |-- home_view.dart
+      |-- widgets/
+        |-- home_list_item.dart
   |-- app.dart
   |-- app_view.dart
   |-- main.dart
