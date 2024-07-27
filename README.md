@@ -73,6 +73,43 @@ flutter_magenta
   |-- app.dart
   |-- app_view.dart
   |-- main.dart
+|-- packages/
+  |-- github_search/
+    |-- github_api_client/
+    |-- github_repository/
+  |-- weather_search/
+    |-- weather_api_client/
+    |-- weather_repository/
+```
+
+The package directory is organized as follows:
+
+```lua
+flutter_magenta/packages/
+|-- github_search/
+  |-- github_api_client/
+    |-- lib/
+      |-- src/
+        |-- models/
+          |-- github_user.dart
+          |-- models.dart
+          |-- search_result.dart
+          |-- search_result_error.dart
+          |-- search_result_item.dart
+        |-- github_api_client.dart
+      |-- github_api_client.dart
+  |-- github_repository/
+    |-- lib/
+      |-- src/
+        |-- models/
+          |-- models.dart
+          |-- repository_result_item.dart
+          |-- repository_search_result.dart
+        |-- github_repository.dart
+      |-- github_repository.dart
+|-- weather_search/
+  |-- weather_api_client/
+  |-- weather_repository/
 ```
 
 ## Acknowledgments
