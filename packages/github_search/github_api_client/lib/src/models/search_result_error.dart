@@ -11,6 +11,5 @@ class SearchResultError implements Exception {
     );
   }
 
-  Map<String, dynamic> toJson() => {'message' : message} ;
-
-  }
+  Map<String, dynamic> toJson() => {'message': message};
+}
