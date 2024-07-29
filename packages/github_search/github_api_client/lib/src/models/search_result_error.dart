@@ -1,4 +1,4 @@
-class SearchResultError {
+class SearchResultError implements Exception {
   final String message;
 
   SearchResultError({
@@ -10,4 +10,7 @@ class SearchResultError {
       message: json['message'] as String,
     );
   }
-}
+
+  Map<String, dynamic> toJson() => {'message' : message} ;
+
+  }
