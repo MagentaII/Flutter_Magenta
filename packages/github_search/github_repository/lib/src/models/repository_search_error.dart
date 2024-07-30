@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-
 class RepositorySearchError implements Exception {
   final String message;
 

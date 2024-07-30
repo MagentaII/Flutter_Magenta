@@ -44,6 +44,10 @@ dependencies:
   github_repository:
     path: packages/github_search/github_repository
 
+  url_launcher: ^6.0.0
+  stream_transform: ^2.0.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

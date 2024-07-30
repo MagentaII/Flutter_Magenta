@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:github_repository/github_repository.dart';
 import 'app_view.dart';
 
 class MagentaApp extends StatelessWidget {
-  final GithubRepository _githubRepository;
-
-  const MagentaApp({
-  required GithubRepository githubRepository,
-  super.key,
-  }) : _githubRepository = githubRepository;
+  const MagentaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
