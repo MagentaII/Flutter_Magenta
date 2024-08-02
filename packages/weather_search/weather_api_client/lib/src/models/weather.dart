@@ -9,8 +9,8 @@ class Weather {
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
-      temperature: json['temperature'] as double,
-      weathercode: json['weathercode'] as double,
+      temperature: (json['temperature'] as num).toDouble(), // 確保轉換為 double
+      weathercode: (json['weathercode'] as num).toDouble(), // 確保轉換為 double
     );
   }
 }

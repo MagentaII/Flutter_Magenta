@@ -11,19 +11,17 @@ enum WeatherCondition {
 
 class Weather extends Equatable {
   final String location;
-  final Temperature temperature;
+  final double temperature;
   final WeatherCondition condition;
-  final DateTime lastUpdate;
 
   Weather({
     required this.location,
     required this.temperature,
     required this.condition,
-    required this.lastUpdate,
   });
 
   @override
-  List<Object> get props => [location, temperature, condition];
+  List<Object?> get props => [location, temperature, condition];
 
   factory Weather.fromClient({
     required weather_api_client.Weather weather,
@@ -31,28 +29,10 @@ class Weather extends Equatable {
   }) {
     return Weather(
       location: location.name,
-      temperature: Temperature(value: weather.temperature),
-      condition: weather.weathercode.toInt().toCondition,
-      lastUpdate: DateTime.now(),
+      temperature: weather.temperature,
+      condition: weather.weathercode.toInt().toCondition
     );
   }
-}
-
-class Temperature extends Equatable {
-  final double value;
-
-  Temperature({
-    required this.value,
-  });
-
-  factory Temperature.fromJson(Map<String, dynamic> json) {
-    return Temperature(
-      value: json['value'] as double,
-    );
-  }
-
-  @override
-  List<Object> get props => [value];
 }
 
 extension on int {
