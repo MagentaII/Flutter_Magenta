@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_magenta/screens/flutter_weather/views/weather_search_view.dart';
+import 'package:flutter_magenta/screens/flutter_weather/views/display/weather_view.dart';
 import 'package:flutter_magenta/screens/github_search/views/github_search_view.dart';
 import 'package:flutter_magenta/screens/home/widgets/home_list_item.dart';
 
@@ -53,7 +53,7 @@ class _HomeViewState extends State<HomeView> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const WeatherSearchView(),
+                        builder: (context) => const WeatherView(),
                       ),
                     );
                   },
