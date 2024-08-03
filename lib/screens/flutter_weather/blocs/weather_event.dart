@@ -38,3 +38,19 @@ final class RefreshWeather extends WeatherEvent {
     return 'LocationChanged { Weather : $weather }';
   }
 }
+
+final class ToggleUnits extends WeatherEvent {
+  final Weather weather;
+
+  const ToggleUnits({
+    required this.weather,
+  });
+
+  @override
+  List<Object> get props => [weather];
+
+  @override
+  String toString() {
+    return 'ToggleUnits { Weather : $weather }';
+  }
+}

@@ -1,22 +1,20 @@
 part of 'weather_bloc.dart';
 
 sealed class WeatherState extends Equatable {
-  const WeatherState();
+  final Weather weather;
+
+  const WeatherState({
+    required this.weather,
+  });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [weather];
 }
 
 /// WeatherInitial
 final class WeatherStateInitial extends WeatherState {
-  final Weather weather;
-
-  WeatherStateInitial({
-    Weather? weather,
-  }) : weather = weather ?? Weather.empty;
-
-  @override
-  List<Object> get props => [weather];
+  // final Weather weather;
+  const WeatherStateInitial({required super.weather});
 
   @override
   String toString() {
@@ -24,19 +22,28 @@ final class WeatherStateInitial extends WeatherState {
   }
 }
 
-final class WeatherStateLoading extends WeatherState {}
-
-final class WeatherStateFailure extends WeatherState {}
-
-final class WeatherStateSuccess extends WeatherState {
-  final Weather weather;
-
-  const WeatherStateSuccess({
-    required this.weather,
-  });
+final class WeatherStateLoading extends WeatherState {
+  const WeatherStateLoading({required super.weather});
 
   @override
-  List<Object> get props => [weather];
+  String toString() {
+    return 'WeatherStateLoading { Weather : $weather }';
+  }
+}
+
+final class WeatherStateFailure extends WeatherState {
+  const WeatherStateFailure({required super.weather});
+
+  @override
+  String toString() {
+    return 'WeatherStateFailure { Weather : $weather }';
+  }
+}
+
+final class WeatherStateSuccess extends WeatherState {
+  // final Weather weather;
+
+  const WeatherStateSuccess({required super.weather});
 
   @override
   String toString() {

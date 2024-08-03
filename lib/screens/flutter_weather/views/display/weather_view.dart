@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_magenta/screens/flutter_weather/blocs/weather_bloc.dart';
@@ -23,22 +24,18 @@ class _WeatherViewState extends State<WeatherView> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              if (kDebugMode) {
-                print(
-                    'Navigation from WeatherPage to SettingsPage at ${DateTime.now()}');
-              }
+              log(
+                'Navigation from WeatherPage to SettingsPage at ${DateTime.now()}',
+              );
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const WeatherSettingView(),
-                ),
+                WeatherSettingView.route(),
               );
             },
           )
         ],
       ),
       body: Center(
-        child: BlocConsumer<WeatherBloc, WeatherState>(
-          listener: (context, state) {},
+        child: BlocBuilder<WeatherBloc, WeatherState>(
           builder: (context, state) {
             return switch (state) {
               WeatherStateInitial() => const WeatherEmpty(),
@@ -60,8 +57,10 @@ class _WeatherViewState extends State<WeatherView> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search, semanticLabel: 'Search'),
         onPressed: () async {
-          final city = await Navigator.of(context).push(WeatherSearchView.route());
+          final city =
+              await Navigator.of(context).push(WeatherSearchView.route());
           if (!context.mounted) return;
+          log('city : $city');
           context.read<WeatherBloc>().add(LocationChanged(query: city));
         },
       ),
