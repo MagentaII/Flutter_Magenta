@@ -73,7 +73,7 @@ flutter_magenta/lib/screens/flutter_weather/
 |-- models/
   |-- weather.dart
 |-- views/
-  |-- display/
+  |-- weather/
     |-- weather_view.dart
   |-- search/
     |-- weather_search_view.dart
