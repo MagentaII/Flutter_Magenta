@@ -45,9 +45,9 @@ class _WeatherViewState extends State<WeatherView> {
                   weather: state.weather,
                   units: state.weather.temperature.units,
                   onRefresh: () async {
-                    context.read<WeatherBloc>().add(
-                          RefreshWeather(weather: state.weather),
-                        );
+                    context
+                        .read<WeatherBloc>()
+                        .add(RefreshWeather(weather: state.weather));
                   },
                 ),
             };
