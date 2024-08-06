@@ -28,44 +28,42 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Column(
-              children: [
-                const SizedBox(height: 8),
-                HomeListItem(
-                  text: 'GitHub Search',
-                  icon: const Icon(Icons.image),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const GithubSearchView(),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 8),
-                HomeListItem(
-                  text: 'Weather Search',
-                  icon: const Icon(Icons.image),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const WeatherView(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  HomeListItem(
+                    text: 'GitHub Search',
+                    icon: const Icon(Icons.image),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const GithubSearchView(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  HomeListItem(
+                    text: 'Weather Search',
+                    icon: const Icon(Icons.image),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const WeatherView(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      }),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.search, semanticLabel: 'Search'),
-        onPressed: () {},
+          );
+        },
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_magenta/screens/github_search/views/github_repository_detail.dart';
 import 'package:github_repository/github_repository.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SearchResultItem extends StatelessWidget {
   const SearchResultItem({super.key, required this.item});
@@ -9,12 +9,29 @@ class SearchResultItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        child: Image.network(item.avatarUrl),
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      elevation: 4,
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16),
+        leading: CircleAvatar(
+          radius: 24, // Adjust the size of the avatar
+          backgroundImage: NetworkImage(item.avatarUrl),
+        ),
+        title: Text(
+          item.fullName,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        onTap: () {
+          Navigator.of(context).push(
+            GithubRepositoryDetail.route(item.fullName),
+          );
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        tileColor: Colors.white,
       ),
-      title: Text(item.fullName),
-      onTap: () => launchUrl(Uri.parse(item.htmlUrl)),
     );
   }
 }

@@ -14,23 +14,21 @@ class HomeListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 128.0,
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Card.outlined(
-        color: Colors.white,
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      elevation: 4,
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16),
+        leading: icon,
+        title: Text(
+          text,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        onTap: onTap,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          side: const BorderSide(
-            color: Colors.black,
-            width: 2.0,
-          ),
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: ListTile(
-          leading: icon,
-          title: Text(text),
-          onTap: onTap,
-        ),
+        tileColor: Colors.white,
       ),
     );
   }

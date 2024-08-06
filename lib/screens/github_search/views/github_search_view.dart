@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../blocs/github_search_bloc.dart';
+import '../blocs/github_search_bloc/github_search_bloc.dart';
 import '../widgets/search_results.dart';
 
 class GithubSearchView extends StatelessWidget {
@@ -13,7 +13,7 @@ class GithubSearchView extends StatelessWidget {
       body: Column(
         children: <Widget>[
           _GithubSearchBar(),
-          _GithubSearchBody(),
+          Expanded(child: _GithubSearchBody()),
         ],
       ),
     );
@@ -27,13 +27,8 @@ class _GithubSearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<_GithubSearchBar> {
   final _textController = TextEditingController();
-  late GithubSearchBloc _githubSearchBloc;
 
-  @override
-  void initState() {
-    super.initState();
-    _githubSearchBloc = context.read<GithubSearchBloc>();
-  }
+  String get _text => _textController.text;
 
   @override
   void dispose() {
@@ -43,29 +38,27 @@ class _SearchBarState extends State<_GithubSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: _textController,
-      autocorrect: false,
-      onChanged: (text) {
-        _githubSearchBloc.add(
-          TextChanged(text: text),
-        );
-      },
-      decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: GestureDetector(
-          onTap: _onClearTapped,
-          child: const Icon(Icons.clear),
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextField(
+              controller: _textController,
+              decoration: const InputDecoration(
+                labelText: 'Search Repository',
+              ),
+            ),
+          ),
         ),
-        border: InputBorder.none,
-        hintText: 'Enter a search term',
-      ),
+        IconButton(
+          key: const Key('searchPage_search_iconButton'),
+          icon: const Icon(Icons.search, semanticLabel: 'Submit'),
+          onPressed: () =>
+              context.read<GithubSearchBloc>().add(TextChanged(text: _text)),
+        )
+      ],
     );
-  }
-
-  void _onClearTapped() {
-    _textController.text = '';
-    _githubSearchBloc.add(const TextChanged(text: ''));
   }
 }
 
@@ -74,14 +67,32 @@ class _GithubSearchBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GithubSearchBloc, GithubSearchState>(
       builder: (context, state) {
-        return switch (state) {
-          SearchStateEmpty() => const Text('Please enter a term to begin'),
-          SearchStateLoading() => const CircularProgressIndicator.adaptive(),
-          SearchStateError() => Text(state.error),
-          SearchStateSuccess() => state.items.isEmpty
-              ? const Text('No Results')
-              : Expanded(child: SearchResults(items: state.items)),
-        };
+        return Center(
+          child: switch (state) {
+            SearchStateEmpty() => const Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('🤔', style: TextStyle(fontSize: 48)),
+                SizedBox(height: 8),
+                Text('Please enter a term to begin', style: TextStyle(fontSize: 24)),
+              ],
+            ),
+            SearchStateLoading() => const CircularProgressIndicator.adaptive(),
+            SearchStateError() => Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('🥲', style: TextStyle(fontSize: 48)), // Emoji text
+                const SizedBox(height: 8), // Space between emoji and error text
+                Text(state.error, style: const TextStyle(fontSize: 24)), // Error message
+              ],
+            ),
+            SearchStateSuccess() => state.items.isEmpty
+                ? const Text('No Results')
+                : Expanded(child: SearchResults(items: state.items)),
+          },
+        );
       },
     );
   }

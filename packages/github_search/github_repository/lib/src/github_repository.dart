@@ -1,5 +1,10 @@
 import 'package:github_api_client/github_api_client.dart'
-    show GithubApiClient, SearchResult, SearchResultError;
+    show
+        GithubApiClient,
+        GithubRepos,
+        SearchResult,
+        SearchResultError,
+        ReposError;
 import 'github_cache.dart';
 import 'models/models.dart';
 
@@ -41,6 +46,21 @@ class GithubRepository {
           ? throw RepositorySearchError.fromJson(error.toJson())
           : throw const RepositorySearchError(
               message: 'An unknown error occurred');
+    }
+  }
+
+  Future<RepositoryDetail> getRepositoryDetail(String fullName) async {
+    try {
+      final GithubRepos githubRepos =
+          await _client.getRepositoryDetail(fullName);
+      return RepositoryDetail.fromClient(
+        reposOwner: githubRepos.owner,
+        githubRepos: githubRepos,
+      );
+    } catch (error) {
+      error is ReposError
+          ? throw RepositoryError.fromJson(error.toJson())
+          : throw RepositoryError(message: 'An unknown error occurred');
     }
   }
 }
