@@ -17,14 +17,12 @@ class GithubRepositoryDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<GithubDetailBloc>().add(OnRepoTapped(fullName: fullName));
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Repository Details',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.teal,
       ),
       body: BlocBuilder<GithubDetailBloc, GithubDetailState>(
         builder: (context, state) {
@@ -72,7 +70,6 @@ class GithubRepositoryDetail extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 32.0, // headline5 的字體大小
                           fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple,
                         ),
                       ),
                     ),
@@ -81,8 +78,7 @@ class GithubRepositoryDetail extends StatelessWidget {
                     Text(
                       state.detail.description ?? '',
                       style: const TextStyle(
-                        fontSize: 16.0, // bodyText1 的字體大小
-                        color: Colors.black87,
+                        fontSize: 20.0, // bodyText1 的字體大小
                       ),
                     ),
                     const SizedBox(height: 16.0),
@@ -99,7 +95,7 @@ class GithubRepositoryDetail extends StatelessWidget {
                                 const Icon(Icons.star, color: Colors.amber),
                                 const SizedBox(width: 4.0),
                                 Text(state.detail.stargazersCount.toString(),
-                                    style: const TextStyle(fontSize: 16.0)),
+                                    style: const TextStyle(fontSize: 20.0)),
                                 // bodyText2 的字體大小
                               ],
                             ),
@@ -110,7 +106,7 @@ class GithubRepositoryDetail extends StatelessWidget {
                                     color: Colors.grey),
                                 const SizedBox(width: 4.0),
                                 Text(state.detail.forksCount.toString(),
-                                    style: const TextStyle(fontSize: 16.0)),
+                                    style: const TextStyle(fontSize: 20.0)),
                                 // bodyText2 的字體大小
                               ],
                             ),
@@ -123,16 +119,14 @@ class GithubRepositoryDetail extends StatelessWidget {
                     Text(
                       'Language: ${state.detail.language}',
                       style: const TextStyle(
-                        fontSize: 16.0, // bodyText2 的字體大小
-                        color: Colors.black54,
+                        fontSize: 20.0, // bodyText2 的字體大小
                       ),
                     ),
                     const SizedBox(height: 8.0),
                     Text(
                       'Last updated: ${state.detail.updatedAt}',
                       style: const TextStyle(
-                        fontSize: 16.0, // bodyText2 的字體大小
-                        color: Colors.black54,
+                        fontSize: 20.0, // bodyText2 的字體大小
                       ),
                     ),
                     const SizedBox(height: 24.0),
@@ -141,11 +135,10 @@ class GithubRepositoryDetail extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () =>
                             launchUrl(Uri.parse(state.detail.htmlUrl)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                          foregroundColor: Colors.white,
+                        child: const Text(
+                          'Open Repository',
+                          style: TextStyle(fontSize: 24.0),
                         ),
-                        child: const Text('Open Repository'),
                       ),
                     ),
                   ],

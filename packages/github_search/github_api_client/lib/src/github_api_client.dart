@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:github_api_client/src/models/github_detail/repos_error.dart';
+import 'dart:developer';
 
 import 'models/models.dart';
 import 'package:http/http.dart' as http;
@@ -17,14 +17,20 @@ class GithubApiClient {
   // if success => return repository result
   // else error
   Future<SearchResult> githubRepositorySearch(String term) async {
-    final response = await httpClient
-        .get(Uri.parse('${baseUrl}search/repositories?q=$term'));
-    final results = json.decode(response.body) as Map<String, dynamic>;
-
-    if (response.statusCode == 200) {
-      return SearchResult.fromJson(results);
-    } else {
-      throw SearchResultError.fromJson(results);
+    log('Github API Client and term is $term');
+    try {
+      final response = await httpClient.get(Uri.parse('${baseUrl}search/repositories?q=$term'));
+      log('Github API Client and response is $response');
+      final results = json.decode(response.body) as Map<String, dynamic>;
+      log('StatusCode : ${response.statusCode}');
+      if (response.statusCode == 200) {
+        return SearchResult.fromJson(results);
+      } else {
+        throw SearchResultError.fromJson(results);
+      }
+    } catch (e) {
+      log('Error occurred: $e');
+      rethrow;
     }
   }
 

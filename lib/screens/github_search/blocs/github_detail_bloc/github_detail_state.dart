@@ -13,7 +13,7 @@ final class DetailStateEmpty extends GithubDetailState {}
 final class DetailStateLoading extends GithubDetailState {}
 
 final class DetailStateSuccess extends GithubDetailState {
-  final RepositoryDetail detail ;
+  final RepositoryDetail detail;
 
   const DetailStateSuccess(this.detail);
 

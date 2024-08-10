@@ -1,52 +1,98 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import '../../../../animation/animation.dart';
 
-class WeatherSearchView extends StatefulWidget {
+class WeatherSearchView extends StatelessWidget {
   const WeatherSearchView._();
 
   static Route<String> route() {
-    return MaterialPageRoute(
-      builder: (_) => const WeatherSearchView._(),
-    );
-  }
-
-  @override
-  State<WeatherSearchView> createState() => _WeatherSearchViewState();
-}
-
-class _WeatherSearchViewState extends State<WeatherSearchView> {
-  final TextEditingController _textController = TextEditingController();
-
-  String get _text => _textController.text;
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
+    return createPageRoute<String>(const WeatherSearchView._());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('City Search')),
-      body: Row(
+      body: const Column(
+        children: [
+          WeatherSearchBar(),
+        ],
+      ),
+    );
+  }
+}
+
+class WeatherSearchBar extends StatefulWidget {
+  const WeatherSearchBar({super.key});
+
+  @override
+  State<WeatherSearchBar> createState() => _WeatherSearchBarState();
+}
+
+class _WeatherSearchBarState extends State<WeatherSearchBar> {
+  final FocusNode _focusNode = FocusNode();
+  bool _isEditing = false;
+  final _textController = TextEditingController();
+
+  String get _text => _textController.text;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {
+        _isEditing = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Row(
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: TextField(
-                controller: _textController,
-                decoration: const InputDecoration(
-                  labelText: 'City',
-                  hintText: 'Chicago',
+            child: TextField(
+              controller: _textController,
+              focusNode: _focusNode,
+              textInputAction: TextInputAction.search,
+              onSubmitted: (_) {
+                Navigator.of(context).pop(_text);
+              },
+              decoration: InputDecoration(
+                hintText: 'Search',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  // Adjust the radius here
+                  borderSide: BorderSide.none, // Remove the border side
                 ),
+                filled: true,
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 16.0),
               ),
             ),
           ),
-          IconButton(
-            key: const Key('searchPage_search_iconButton'),
-            icon: const Icon(Icons.search, semanticLabel: 'Submit'),
-            onPressed: () => Navigator.of(context).pop(_text),
-          )
+          if (_isEditing) const SizedBox(width: 8.0),
+          if (_isEditing)
+            TextButton(
+              onPressed: () {
+                // Handle the cancel action here
+                log('Cancel clicked');
+                // Clear the TextField and remove focus
+                _focusNode.unfocus();
+                _textController.clear();
+              },
+              child: const Text('Cancel', style: TextStyle(fontSize: 20)),
+            ),
         ],
       ),
     );

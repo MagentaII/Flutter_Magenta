@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:github_api_client/github_api_client.dart'
     show
         GithubApiClient,
@@ -18,7 +20,9 @@ class GithubRepository {
   }) : _client = client ?? GithubApiClient();
 
   Future<RepositorySearchResult> githubRepositorySearch(String term) async {
+    log('Github API Repository and term is $term');
     final RepositorySearchResult? cacheResult = cache.get(term);
+    log('Github API Cache is $cacheResult');
     if (cacheResult != null) {
       final List<RepositoryResultItem> items = cacheResult.items
           .map((item) => RepositoryResultItem(
@@ -32,6 +36,7 @@ class GithubRepository {
 
     try {
       final SearchResult result = await _client.githubRepositorySearch(term);
+      log('Github API SearchResult is $result');
       final List<RepositoryResultItem> items = result.items
           .map((item) => RepositoryResultItem(
                 fullName: item.fullName,
@@ -42,6 +47,7 @@ class GithubRepository {
       cache.set(term, RepositorySearchResult(items: items));
       return RepositorySearchResult(items: items);
     } catch (error) {
+      log('Github API SearchResult is error');
       error is SearchResultError
           ? throw RepositorySearchError.fromJson(error.toJson())
           : throw const RepositorySearchError(

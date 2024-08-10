@@ -11,7 +11,6 @@ class SearchResultItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      elevation: 4,
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         leading: CircleAvatar(
@@ -20,7 +19,7 @@ class SearchResultItem extends StatelessWidget {
         ),
         title: Text(
           item.fullName,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
         ),
         onTap: () {
           Navigator.of(context).push(
@@ -30,7 +29,6 @@ class SearchResultItem extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        tileColor: Colors.white,
       ),
     );
   }
