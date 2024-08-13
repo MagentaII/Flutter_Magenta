@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_magenta/screens/flutter_weather/blocs/weather_bloc.dart';
+import 'package:flutter_magenta/screens/flutter_weather/blocs/weather_bloc/weather_bloc.dart';
 import 'package:flutter_magenta/screens/github_search/blocs/github_detail_bloc/github_detail_bloc.dart';
 import 'package:flutter_magenta/screens/github_search/blocs/github_search_bloc/github_search_bloc.dart';
 import 'package:flutter_magenta/screens/home/views/home_view.dart';

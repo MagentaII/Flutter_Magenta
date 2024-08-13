@@ -8,8 +8,11 @@ environment:
 
 dependencies:
   equatable: ^2.0.5
-  open_meteo_api:
+  weather_api_client:
     path: ../weather_api_client
+
+  weather_local_storage:
+    path: ../weather_local_storage
 
 dev_dependencies:
   coverage: ^1.0.3
