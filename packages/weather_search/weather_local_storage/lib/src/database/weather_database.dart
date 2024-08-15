@@ -26,7 +26,7 @@ class WeatherDatabase {
     return await openDatabase(join(await getDatabasesPath(), _databaseName),
         onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE $table($columnId INTEGER PRIMARY KEY AUTOINCREMENT, $columnCity TEXT NOT NULL)",
+        "CREATE TABLE $table($columnId INTEGER PRIMARY KEY AUTOINCREMENT, $columnCity TEXT NOT NULL UNIQUE)",
       );
     }, version: _databaseVersion);
   }

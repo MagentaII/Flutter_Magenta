@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_magenta/screens/flutter_weather/blocs/search_record_bloc/search_record_bloc.dart';
 import 'package:weather_repository/weather_repository.dart' hide Weather;
 
 import '../models/weather.dart';
@@ -17,6 +19,9 @@ class WeatherPopulated extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context
+        .read<SearchRecordBloc>()
+        .add(AddSearchRecord(record: SearchRecord(city: weather.location)));
     final theme = Theme.of(context);
     return Stack(
       children: [

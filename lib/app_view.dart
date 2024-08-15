@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_magenta/screens/flutter_weather/blocs/search_record_bloc/search_record_bloc.dart';
 import 'package:flutter_magenta/screens/flutter_weather/blocs/weather_bloc/weather_bloc.dart';
 import 'package:flutter_magenta/screens/github_search/blocs/github_detail_bloc/github_detail_bloc.dart';
 import 'package:flutter_magenta/screens/github_search/blocs/github_search_bloc/github_search_bloc.dart';
@@ -31,6 +32,9 @@ class MagentaAppView extends StatelessWidget {
                 repository: RepositoryProvider.of<GithubRepository>(context))),
         BlocProvider(
             create: (context) => WeatherBloc(
+                repository: RepositoryProvider.of<WeatherRepository>(context))),
+        BlocProvider(
+            create: (context) => SearchRecordBloc(
                 repository: RepositoryProvider.of<WeatherRepository>(context))),
       ],
       child: MaterialApp(
