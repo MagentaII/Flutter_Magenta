@@ -7,24 +7,42 @@ import 'package:flutter_magenta/screens/home/widgets/home_list_item.dart';
 
 import '../../../animation/animation.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  String _searchQuery = '';
+
+  void _updateSearchQuery(String query) {
+    setState(() {
+      _searchQuery = query;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         body: Column(
       children: [
-        SizedBox(height: 64.0),
-        HomeSearchBar(),
-        Expanded(child: HomeBody()),
+        const SizedBox(height: 64.0),
+        HomeSearchBar(onSearch: _updateSearchQuery),
+        Expanded(
+            child: HomeBody(
+          searchQuery: _searchQuery,
+        )),
       ],
     ));
   }
 }
 
 class HomeSearchBar extends StatefulWidget {
-  const HomeSearchBar({super.key});
+  final Function(String) onSearch;
+
+  const HomeSearchBar({super.key, required this.onSearch});
 
   @override
   State<HomeSearchBar> createState() => _HomeSearchBarState();
@@ -33,6 +51,10 @@ class HomeSearchBar extends StatefulWidget {
 class _HomeSearchBarState extends State<HomeSearchBar> {
   final FocusNode _focusNode = FocusNode();
   bool _isEditing = false;
+  final _textController = TextEditingController();
+
+  // if want to get TextField text
+  // String get _text => _textController.text;
 
   @override
   void initState() {
@@ -46,6 +68,7 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
 
   @override
   void dispose() {
+    _textController.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -58,8 +81,10 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
         children: [
           Expanded(
             child: TextField(
+              controller: _textController,
               focusNode: _focusNode,
               textInputAction: TextInputAction.search,
+              onChanged: widget.onSearch,
               onSubmitted: (_) {},
               decoration: InputDecoration(
                 hintText: 'Search',
@@ -83,6 +108,8 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
                 log('Cancel clicked');
                 // Clear the TextField and remove focus
                 _focusNode.unfocus();
+                widget.onSearch('');
+                _textController.clear();
               },
               child: const Text('Cancel', style: TextStyle(fontSize: 20)),
             ),
@@ -93,7 +120,9 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
 }
 
 class HomeBody extends StatelessWidget {
-  const HomeBody({super.key});
+  final String searchQuery;
+
+  const HomeBody({super.key, required this.searchQuery});
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +152,12 @@ class HomeBody extends StatelessWidget {
       // },
     ];
 
+    final filteredItems = items
+        .where((item) => (item['text'] as String)
+            .toLowerCase()
+            .contains(searchQuery.toLowerCase()))
+        .toList();
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -136,9 +171,9 @@ class HomeBody extends StatelessWidget {
                 mainAxisSpacing: 8.0, // 行與行之間的間距
                 childAspectRatio: 1.0, // 調整每個項目的寬高比
               ),
-              itemCount: items.length,
+              itemCount: filteredItems.length,
               itemBuilder: (context, index) {
-                final item = items[index];
+                final item = filteredItems[index];
                 return HomeListItem(
                   text: item['text'] as String,
                   image: item['image'] as Image,
