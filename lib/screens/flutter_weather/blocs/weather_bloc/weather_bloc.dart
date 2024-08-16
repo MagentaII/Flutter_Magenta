@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:weather_repository/weather_repository.dart' hide Weather;
-import '../models/weather.dart';
+import '../../models/weather.dart';
 
 part 'weather_event.dart';
 

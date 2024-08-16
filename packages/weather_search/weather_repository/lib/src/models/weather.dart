@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:open_meteo_api/weather_api_client.dart' as weather_api_client;
+import 'package:weather_api_client/weather_api_client.dart' as weather_api_client;
 
 enum WeatherCondition {
   clear,
@@ -14,7 +14,7 @@ class Weather extends Equatable {
   final double temperature;
   final WeatherCondition condition;
 
-  Weather({
+  const Weather({
     required this.location,
     required this.temperature,
     required this.condition,

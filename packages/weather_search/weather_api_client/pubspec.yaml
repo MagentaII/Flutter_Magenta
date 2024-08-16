@@ -1,4 +1,4 @@
-name: open_meteo_api
+name: weather_api_client
 description: "A new Flutter package project."
 version: 0.0.1
 homepage:

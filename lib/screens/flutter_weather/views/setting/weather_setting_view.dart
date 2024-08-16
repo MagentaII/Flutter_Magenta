@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_magenta/screens/flutter_weather/blocs/weather_bloc.dart';
+import 'package:flutter_magenta/screens/flutter_weather/blocs/weather_bloc/weather_bloc.dart';
 import 'package:flutter_magenta/screens/flutter_weather/models/weather.dart';
 import '../../../../animation/animation.dart';
 
