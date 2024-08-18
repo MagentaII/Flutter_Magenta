@@ -4,7 +4,7 @@ import 'package:flutter_magenta/screens/flutter_weather/blocs/search_record_bloc
 import 'package:flutter_magenta/screens/flutter_weather/blocs/weather_bloc/weather_bloc.dart';
 import 'package:flutter_magenta/screens/github_search/blocs/github_detail_bloc/github_detail_bloc.dart';
 import 'package:flutter_magenta/screens/github_search/blocs/github_search_bloc/github_search_bloc.dart';
-import 'package:flutter_magenta/screens/home/views/home_view.dart';
+import 'package:flutter_magenta/screens/home/widgets/bottom_navigation_bar.dart';
 import 'package:flutter_magenta/theme/theme.dart';
 import 'package:flutter_magenta/theme/util.dart';
 
@@ -41,7 +41,7 @@ class MagentaAppView extends StatelessWidget {
         title: 'Flutter Magenta',
         debugShowCheckedModeBanner: false,
         theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-        home: const HomeView(),
+        home: const MyBottomNavigationBar(),
       ),
     );
   }

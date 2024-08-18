@@ -49,6 +49,8 @@ dependencies:
 
   url_launcher: ^6.0.0
   stream_transform: ^2.0.0
+  image_picker: ^1.1.2
+  image_cropper: ^8.0.2
 
 
 dev_dependencies:

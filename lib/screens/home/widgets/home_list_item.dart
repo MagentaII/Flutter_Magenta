@@ -17,13 +17,14 @@ class HomeListItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap, // 點擊事件
       child: Card(
-        elevation: 0, // 設定陰影為 0，因為圖片可能已經提供陰影效果
+        elevation: 5, // 設定陰影為 0，因為圖片可能已經提供陰影效果
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12), // 設定圓角
         ),
         clipBehavior: Clip.antiAlias, // 確保圖片不會超出圓角邊界
         child: Column(
           children: [
+            const SizedBox(height: 8),
             // 背景圖片
             Expanded(
               flex: 2, // 確保圖片佔用更多的空間

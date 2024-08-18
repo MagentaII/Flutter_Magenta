@@ -113,6 +113,7 @@ class _SearchHistoryState extends State<SearchHistory> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<SearchRecordBloc>().add(LoadSearchRecords());
     return BlocBuilder<SearchRecordBloc, SearchRecordState>(
       builder: (context, state) {
         if (state is SearchRecordStateLoading) {
