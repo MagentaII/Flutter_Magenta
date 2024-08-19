@@ -55,10 +55,21 @@ The project directory is organized as follows:
 ```lua
 flutter_magenta
 |-- lib/
+  |-- animation/
+    |-- animation.dart
+  |-- core/
+    |-- simple_bloc_observer.dart
+  |-- helper/
+    |-- image_helper.dart
+  |-- injection/
+    |-- service_locator.dart
   |-- screens/
     |-- flutter_weather/
     |-- github_search/
     |-- home/
+  |-- theme/
+    |-- theme.dart
+    |-- util.dart
   |-- app.dart
   |-- app_view.dart
   |-- main.dart
@@ -67,9 +78,14 @@ flutter_magenta
 ```lua
 flutter_magenta/lib/screens/flutter_weather/
 |-- blocs/
-  |-- weather_bloc.dart
-  |-- weather_event.dart
-  |-- weather_state.dart
+  |-- search_record_bloc/
+    |-- search_record_bloc.dart
+    |-- search_record_event.dart
+    |-- search_record_state.dart
+  |-- weather_bloc/
+    |-- weather_bloc.dart
+    |-- weather_event.dart
+    |-- weather_state.dart
 |-- models/
   |-- weather.dart
 |-- views/
@@ -90,10 +106,16 @@ flutter_magenta/lib/screens/flutter_weather/
 ```lua
 flutter_magenta/lib/screens/github_search/
 |-- blocs/
-  |-- github_search_bloc.dart
-  |-- github_search_event.dart
-  |-- github_search_state.dart
+  |-- github_detail_bloc/
+    |-- github_detail_bloc.dart
+    |-- github_detail_event.dart
+    |-- github_detail_state.dart
+  |-- github_search_bloc/
+    |-- github_search_bloc.dart
+    |-- github_search_event.dart
+    |-- github_search_state.dart
 |-- views/
+  |-- github_repository_detail.dart
   |-- github_search_view.dart
 |-- widgets/
   |-- search_result_item.dart
@@ -104,7 +126,9 @@ flutter_magenta/lib/screens/github_search/
 flutter_magenta/lib/screens/home/
 |-- views/
   |-- home_view.dart
+  |-- profile_view.dart
 |-- widgets/
+  |-- bottom_navigation_bar.dart
   |-- home_list_item.dart
 ```
 
@@ -117,6 +141,7 @@ flutter_magenta/packages/
   |-- github_repository/
 |-- weather_search/
   |-- weather_api_client/
+  |-- weather_local_storage/
   |-- weather_repository/
 ```
 
@@ -125,11 +150,16 @@ flutter_magenta/packages/github_search/github_api_client/
 |-- lib/
   |-- src/
     |-- models/
-      |-- github_user.dart
+      |-- github_detail/
+        |-- github_repos.dart
+        |-- repos_error.dart
+        |-- repos_owner.dart
+      |-- github_search/
+        |-- github_user.dart
+        |-- search_result.dart
+        |-- search_result_error.dart
+        |-- search_result_item.dart
       |-- models.dart (Barrel Files)
-      |-- search_result.dart
-      |-- search_result_error.dart
-      |-- search_result_item.dart
     |-- github_api_client.dart
   |-- github_api_client.dart (Barrel Files)
 ```
@@ -139,10 +169,14 @@ flutter_magenta/packages/github_search/github_repository/
 |-- lib/
   |-- src/
     |-- models/
+      |-- github_detail/
+        |-- repository_detail.dart
+        |-- repository_error.dart
+      |-- github_search/
+        |-- repository_result_item.dart
+        |-- repository_search_error.dart
+        |-- repository_search_result.dart
       |-- models.dart (Barrel Files)
-      |-- repository_result_item.dart
-      |-- repository_search_error.dart
-      |-- repository_search_result.dart
     |-- github_cache.dart
     |-- github_repository.dart
   |-- github_repository.dart (Barrel Files)
@@ -161,11 +195,26 @@ flutter_magenta/packages/weather_search/weather_api_client/
 ```
 
 ```lua
+flutter_magenta/packages/weather_search/weather_local_storage/
+|-- lib/
+  |-- src/
+    |-- database/
+      |-- database.dart (Barrel Files)
+      |-- weather_database.dart
+    |-- models/
+      |-- models.dart (Barrel Files)
+      |-- search_record.dart
+    |-- weather_local_storage.dart
+  |-- weather_local_storage.dart (Barrel Files)
+```
+
+```lua
 flutter_magenta/packages/weather_search/weather_repository/
 |-- lib/
   |-- src/
     |-- models/
       |-- models.dart (Barrel Files)
+      |-- search_record.dart
       |-- weather.dart
     |-- weather_repository.dart
   |-- weather_repository.dart (Barrel Files)
