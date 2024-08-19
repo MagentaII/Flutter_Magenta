@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_magenta/helper/image_helper.dart';
+import 'package:hive/hive.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -32,6 +33,27 @@ class MyAvatar extends StatefulWidget {
 
 class _MyAvatarState extends State<MyAvatar> {
   File? _image;
+  late Box<String> _myAvatarBox;
+
+  @override
+  void initState() {
+    super.initState();
+    _myAvatarBox = Hive.box<String>('myAvatarBox');
+    _loadAvatar();
+  }
+
+  void _loadAvatar() {
+    final storedImagePath = _myAvatarBox.get(1);
+    if (storedImagePath != null) {
+      setState(() {
+        _image = File(storedImagePath);
+      });
+    }
+  }
+
+  void _writeData(File image) {
+    _myAvatarBox.put(1, image.path);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +82,7 @@ class _MyAvatarState extends State<MyAvatar> {
               if (croppedFile != null) {
                 setState(() {
                   _image = File(croppedFile.path);
+                  _writeData(_image!);
                 });
               }
             }
