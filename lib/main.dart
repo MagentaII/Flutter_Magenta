@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_magenta/app.dart';
-import 'package:flutter_magenta/simple_bloc_observer.dart';
+import 'package:flutter_magenta/core/simple_bloc_observer.dart';
 import 'package:github_repository/github_repository.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:weather_repository/weather_repository.dart';
+import 'injection/service_locator.dart';
 
 void main() async {
+  // dependency injection (DI)
+  setup();
+
   Bloc.observer = const SimpleBlocObserver();
 
   // Initialize

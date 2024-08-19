@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_magenta/helper/image_helper.dart';
 import 'package:hive/hive.dart';
+import '../../../injection/service_locator.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -20,7 +20,6 @@ class ProfileView extends StatelessWidget {
   }
 }
 
-final imageHelper = ImageHelper();
 
 class MyAvatar extends StatefulWidget {
   final String initials;
@@ -34,6 +33,7 @@ class MyAvatar extends StatefulWidget {
 class _MyAvatarState extends State<MyAvatar> {
   File? _image;
   late Box<String> _myAvatarBox;
+  final imageHelper = getIt<ImageHelper>();
 
   @override
   void initState() {
