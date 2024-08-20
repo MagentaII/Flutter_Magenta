@@ -27,29 +27,34 @@ class GithubRepositoryDetail extends StatelessWidget {
       body: BlocBuilder<GithubDetailBloc, GithubDetailState>(
         builder: (context, state) {
           return switch (state) {
-            DetailStateEmpty() => const Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('🤔', style: TextStyle(fontSize: 48)),
-                  SizedBox(height: 8),
-                  Text('Please enter a term to begin',
-                      style: TextStyle(fontSize: 24)),
-                ],
-              ),
-            DetailStateLoading() => const CircularProgressIndicator.adaptive(),
-            DetailStateError() => Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('🥲', style: TextStyle(fontSize: 48)),
-                  // Emoji text
-                  const SizedBox(height: 8),
-                  // Space between emoji and error text
-                  Text(state.error, style: const TextStyle(fontSize: 24)),
-                  // Error message
-                ],
-              ),
+            DetailStateEmpty() => const Center(
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('🤔', style: TextStyle(fontSize: 48)),
+                    SizedBox(height: 8),
+                    Text('Please enter a term to begin',
+                        style: TextStyle(fontSize: 24)),
+                  ],
+                ),
+            ),
+            DetailStateLoading() =>
+              const Center(child: CircularProgressIndicator.adaptive()),
+            DetailStateError() => Center(
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('🥲', style: TextStyle(fontSize: 48)),
+                    // Emoji text
+                    const SizedBox(height: 8),
+                    // Space between emoji and error text
+                    Text(state.error, style: const TextStyle(fontSize: 24)),
+                    // Error message
+                  ],
+                ),
+            ),
             DetailStateSuccess() => Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
