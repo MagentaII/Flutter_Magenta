@@ -20,17 +20,41 @@ class _WeatherViewState extends State<WeatherView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text(
+          'Flutter Weather',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22.0,
+          ),
+        ),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.home,
+                size: 32,
+              )),
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              log(
-                'Navigation from WeatherPage to SettingsPage at ${DateTime.now()}',
-              );
-              Navigator.of(context).push(
-                WeatherSettingView.route(),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: IconButton(
+              icon: const Icon(
+                Icons.settings,
+                size: 28,
+              ),
+              onPressed: () {
+                log(
+                  'Navigation from WeatherPage to SettingsPage at ${DateTime.now()}',
+                );
+                Navigator.of(context).push(
+                  WeatherSettingView.route(),
+                );
+              },
+            ),
           )
         ],
       ),

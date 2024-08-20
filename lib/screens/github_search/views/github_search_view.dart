@@ -11,7 +11,26 @@ class GithubSearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('GitHub Search')),
+      appBar: AppBar(
+        title: const Text(
+          'GitHub Search',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22.0,
+          ),
+        ),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.home,
+                size: 32,
+              )),
+        ),
+      ),
       body: Column(
         children: <Widget>[
           _GithubSearchBar(),

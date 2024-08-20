@@ -14,7 +14,15 @@ class WeatherSearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('City Search')),
+      appBar: AppBar(
+        title: const Text(
+          'Weather Search',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22.0,
+          ),
+        ),
+      ),
       body: const Column(
         children: [
           WeatherSearchBar(),
@@ -71,7 +79,7 @@ class _WeatherSearchBarState extends State<WeatherSearchBar> {
                 Navigator.of(context).pop(_text);
               },
               decoration: InputDecoration(
-                hintText: 'Search',
+                hintText: 'Taiwan...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -110,7 +118,6 @@ class SearchHistory extends StatefulWidget {
 }
 
 class _SearchHistoryState extends State<SearchHistory> {
-
   @override
   Widget build(BuildContext context) {
     context.read<SearchRecordBloc>().add(LoadSearchRecords());
@@ -137,7 +144,9 @@ class _SearchHistoryState extends State<SearchHistory> {
                       ),
                       TextButton(
                         onPressed: () {
-                          context.read<SearchRecordBloc>().add(ClearAllSearchRecords());
+                          context
+                              .read<SearchRecordBloc>()
+                              .add(ClearAllSearchRecords());
                         },
                         child: const Text('Clear All',
                             style:
@@ -161,7 +170,9 @@ class _SearchHistoryState extends State<SearchHistory> {
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.black45),
                         onPressed: () {
-                          context.read<SearchRecordBloc>().add(RemoveSearchRecord(record: item));
+                          context
+                              .read<SearchRecordBloc>()
+                              .add(RemoveSearchRecord(record: item));
                         },
                       ),
                       onTap: () {

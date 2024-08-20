@@ -28,7 +28,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
         body: Column(
       children: [
-        const SizedBox(height: 64.0),
+        const SizedBox(height: 72.0),
         HomeSearchBar(onSearch: _updateSearchQuery),
         Expanded(
             child: HomeBody(
@@ -76,7 +76,7 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
       child: Row(
         children: [
           Expanded(
@@ -163,27 +163,30 @@ class HomeBody extends StatelessWidget {
         return SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 設定列數為 2
-                crossAxisSpacing: 8.0, // 列與列之間的間距
-                mainAxisSpacing: 8.0, // 行與行之間的間距
-                childAspectRatio: 1.0, // 調整每個項目的寬高比
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // 設定列數為 2
+                  crossAxisSpacing: 8.0, // 列與列之間的間距
+                  mainAxisSpacing: 8.0, // 行與行之間的間距
+                  childAspectRatio: 1.0, // 調整每個項目的寬高比
+                ),
+                itemCount: filteredItems.length,
+                itemBuilder: (context, index) {
+                  final item = filteredItems[index];
+                  return HomeListItem(
+                    text: item['text'] as String,
+                    image: item['image'] as Image,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        createPageRoute(item['view'] as Widget),
+                      );
+                    },
+                  );
+                },
               ),
-              itemCount: filteredItems.length,
-              itemBuilder: (context, index) {
-                final item = filteredItems[index];
-                return HomeListItem(
-                  text: item['text'] as String,
-                  image: item['image'] as Image,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      createPageRoute(item['view'] as Widget),
-                    );
-                  },
-                );
-              },
             ),
           ),
         );
