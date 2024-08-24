@@ -14,13 +14,13 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xff353C5F),
       appBar: AppBar(
+        backgroundColor: const Color(0xff353C5F),
         title: const Text(
           'Profile',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22.0,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 22.0, color: Colors.white),
         ),
         leading: Padding(
           padding: const EdgeInsets.only(left: 12.0),
@@ -29,6 +29,7 @@ class ProfileView extends StatelessWidget {
               icon: const Icon(
                 Icons.person_rounded,
                 size: 32,
+                color: Colors.white,
               )),
         ),
         actions: [
@@ -38,20 +39,44 @@ class ProfileView extends StatelessWidget {
               icon: const Icon(
                 Icons.edit,
                 size: 28,
+                color: Colors.white,
               ),
               onPressed: () {},
             ),
           )
         ],
       ),
-      body: const Column(
+      body: Stack(
         children: [
-          SizedBox(height: 20.0),
-          MyAvatar(initials: 'MA'),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: ProfileContent(),
+          Positioned(
+            top: 70,
+            bottom: -50,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0.0),
+              child: SizedBox(
+                width: 200,
+                child: Card(
+                  color: const Color(0xfff5fafb),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0), // 调整圆角的大小
+                  ),
+                ),
+              ),
+            ),
           ),
+          Positioned(
+            top: 0,
+            left: MediaQuery.of(context).size.width / 2 - 64,
+            child: const MyAvatar(initials: 'MA'),
+          ),
+          const Positioned(
+            top: 136,
+            left: 16,
+            right: 16,
+            child: ProfileContent(),
+          )
         ],
       ),
     );
@@ -188,25 +213,23 @@ class _ProfileContentState extends State<ProfileContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 56.0),
+        // Add space at the top to avoid overlapping with the avatar
         Card(
-          elevation: 0.0, // Optional: Adds a shadow effect
+          color: Colors.white,
+          elevation: 5.0,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12), // 設定圓角
-              side: const BorderSide(
-                color: Color(0xff054b71), // 邊框顏色
-                width: 1.5, // 邊框寬度
-              )
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0), // Adds padding inside the card
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'About',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

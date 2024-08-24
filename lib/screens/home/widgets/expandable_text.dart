@@ -25,7 +25,7 @@ class _ExpandableTextState extends State<ExpandableText> {
       text,
       maxLines: isExpanded ? null : 3,
       overflow: isExpanded ? null : TextOverflow.ellipsis,
-      style: const TextStyle(fontSize: 16),
+      style: const TextStyle(fontSize: 18),
     );
 
     return GestureDetector(
