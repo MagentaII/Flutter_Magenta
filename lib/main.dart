@@ -14,6 +14,7 @@ void main() async {
   Bloc.observer = const SimpleBlocObserver();
 
   // Initialize
+
   await Hive.initFlutter();
   // Open a box
   await Hive.openBox<String>('myAvatarBox');
