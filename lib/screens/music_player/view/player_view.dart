@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_magenta/screens/music_player/models/song.dart';
+
+import '../bloc/music_player_bloc.dart';
 
 class PlayerView extends StatelessWidget {
-  const PlayerView({super.key});
+  final Song song;
+
+  const PlayerView({required this.song, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,22 +68,21 @@ class PlayerView extends StatelessWidget {
                     Container(
                       height: 330,
                       width: 330,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/album_images/playing_with_light_image.jpg'))),
+                              image: AssetImage(song.albumArtImagePath))),
                     ),
-                    const Row(
+                    Row(
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Playing with Light',
-                              style: TextStyle(
+                              song.songName,
+                              style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                            Text('Roie Shpigler'),
+                            Text(song.artistName),
                           ],
                         )
                       ],
@@ -95,8 +100,14 @@ class PlayerView extends StatelessWidget {
                       '00:00',
                       style: TextStyle(fontSize: 18, color: Color(0xFF5F4D3A)),
                     ),
-                    Icon(Icons.shuffle, color: Color(0xFF5F4D3A),),
-                    Icon(Icons.repeat, color: Color(0xFF5F4D3A),),
+                    Icon(
+                      Icons.shuffle,
+                      color: Color(0xFF5F4D3A),
+                    ),
+                    Icon(
+                      Icons.repeat,
+                      color: Color(0xFF5F4D3A),
+                    ),
                     Text(
                       '00:00',
                       style: TextStyle(fontSize: 18, color: Color(0xFF5F4D3A)),
@@ -113,73 +124,106 @@ class PlayerView extends StatelessWidget {
                 onChanged: (value) {},
               ),
               const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 让图标均匀分布
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1), // 轻微的阴影颜色和透明度
-                            spreadRadius: 2, // 阴影扩散半径
-                            blurRadius: 6, // 阴影模糊半径
-                            offset: const Offset(2, 2), // 阴影偏移量
+              BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
+                builder: (context, state) {
+                  bool isPlaying = state is PlayerStatePlaying;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 让图标均匀分布
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                // 轻微的阴影颜色和透明度
+                                spreadRadius: 2,
+                                // 阴影扩散半径
+                                blurRadius: 6,
+                                // 阴影模糊半径
+                                offset: const Offset(2, 2), // 阴影偏移量
+                              ),
+                            ],
                           ),
-                        ],
+                          child: const Icon(Icons.skip_previous,
+                              color: Colors.brown, size: 32), // 使用黑色图标
+                        ),
                       ),
-                      child: const Icon(Icons.skip_previous,
-                          color: Colors.brown, size: 32), // 使用黑色图标
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1), // 轻微的阴影颜色和透明度
-                            spreadRadius: 2, // 阴影扩散半径
-                            blurRadius: 6, // 阴影模糊半径
-                            offset: const Offset(2, 2), // 阴影偏移量
+                      GestureDetector(
+                        onTap: () {
+                          if (isPlaying) {
+                            context.read<MusicPlayerBloc>().add(PauseSong());
+                          } else {
+                            context.read<MusicPlayerBloc>().add(PlaySong(song));
+                          }
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          height: isPlaying ? 75 : 70,
+                          width: isPlaying ? 75 : 70,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                // 轻微的阴影颜色和透明度
+                                spreadRadius: 2,
+                                // 阴影扩散半径
+                                blurRadius: 6,
+                                // 阴影模糊半径
+                                offset: const Offset(2, 2), // 阴影偏移量
+                              ),
+                            ],
                           ),
-                        ],
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            transitionBuilder:
+                                (Widget child, Animation<double> animation) {
+                              return ScaleTransition(
+                                  scale: animation, child: child);
+                            },
+                            child: Icon(
+                              isPlaying ? Icons.pause : Icons.play_arrow,
+                              key: ValueKey<bool>(isPlaying),
+                              color: Colors.brown,
+                              size: 40,
+                            ),
+                          ), // 突出播放按钮
+                        ),
                       ),
-                      child: const Icon(Icons.play_arrow,
-                          color: Colors.brown, size: 40), // 突出播放按钮
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1), // 轻微的阴影颜色和透明度
-                            spreadRadius: 2, // 阴影扩散半径
-                            blurRadius: 6, // 阴影模糊半径
-                            offset: const Offset(2, 2), // 阴影偏移量
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                // 轻微的阴影颜色和透明度
+                                spreadRadius: 2,
+                                // 阴影扩散半径
+                                blurRadius: 6,
+                                // 阴影模糊半径
+                                offset: const Offset(2, 2), // 阴影偏移量
+                              ),
+                            ],
                           ),
-                        ],
+                          child: const Icon(Icons.skip_next,
+                              color: Colors.brown, size: 32), // 使用黑色图标
+                        ),
                       ),
-                      child: const Icon(Icons.skip_next,
-                          color: Colors.brown, size: 32), // 使用黑色图标
-                    ),
-                  ),
-                ],
+                    ],
+                  );
+                },
               )
             ],
           ),

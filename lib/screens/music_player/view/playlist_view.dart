@@ -57,21 +57,22 @@ class _PlaylistBody extends StatelessWidget {
         artistName: 'Roie Shpigler',
         albumArtImagePath:
             'assets/images/album_images/playing_with_light_image.jpg',
-        audioPath: 'assets/audio/playing_with_light.mp3',
+        audioPath: 'audio/playing_with_light.mp3',
       ),
       const Song(
         songName: 'Hopscotch',
         artistName: 'Louis Adrien',
         albumArtImagePath: 'assets/images/album_images/hopscotch_image.jpg',
-        audioPath: 'assets/audio/hopscotch.mp3',
+        audioPath: 'audio/hopscotch.mp3',
       ),
       const Song(
         songName: 'Woodcraft',
         artistName: 'Ziv Moran',
         albumArtImagePath: 'assets/images/album_images/woodcraft_image.jpg',
-        audioPath: 'assets/audio/woodcraft.mp3',
+        audioPath: 'audio/woodcraft.mp3',
       ),
     ];
+
     return ListView.builder(
       itemCount: songs.length,
       itemBuilder: (context, index) {
@@ -99,7 +100,7 @@ class _PlaylistBody extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const PlayerView(),
+                builder: (context) => PlayerView(song: song),
               ),
             );
           },
