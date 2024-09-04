@@ -1,12 +1,13 @@
+import 'dart:developer';
+
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter_magenta/screens/music_player/repository/music_player_repository.dart';
 
 class PlayerHelper {
   final AudioPlayer _audioPlayer = AudioPlayer();
-  final MusicPlayerRepository _repository = MusicPlayerRepository();
-
-  // int _currentIndex = -1; // 当前播放的歌曲索引
-  bool _repeatMode = false; // 当前重复播放模式
+  // final MusicPlayerRepository _repository = MusicPlayerRepository();
+  //
+  // // int _currentIndex = -1; // 当前播放的歌曲索引
+  // bool _repeatMode = false; // 当前重复播放模式
 
   Stream<Duration> get onDurationChanged => _audioPlayer.onDurationChanged;
 
@@ -31,11 +32,13 @@ class PlayerHelper {
 
 // play
   Future<void> play() async {
+    log('play song');
     await _audioPlayer.resume();
   }
 
 // resume
   Future<void> resume() async {
+    log('Resume song');
     await _audioPlayer.resume();
   }
 
@@ -54,22 +57,24 @@ class PlayerHelper {
     await _audioPlayer.stop();
   }
 
-  // 设置重复播放模式
-  void setRepeatMode(bool shouldRepeat) {
-    _repeatMode = shouldRepeat;
-    if (shouldRepeat) {
-      // 使用 AudioPlayer 的 setReleaseMode 方法来设置循环播放
-      _audioPlayer.setReleaseMode(ReleaseMode.loop);
-    } else {
-      _audioPlayer.setReleaseMode(ReleaseMode.release);
-    }
-  }
-
-// dispose
+  // dispose
   void dispose() {
     _audioPlayer.dispose();
   }
 }
+
+  // // 设置重复播放模式
+  // void setRepeatMode(bool shouldRepeat) {
+  //   _repeatMode = shouldRepeat;
+  //   if (shouldRepeat) {
+  //     // 使用 AudioPlayer 的 setReleaseMode 方法来设置循环播放
+  //     _audioPlayer.setReleaseMode(ReleaseMode.loop);
+  //   } else {
+  //     _audioPlayer.setReleaseMode(ReleaseMode.release);
+  //   }
+  // }
+
+
 
 
 

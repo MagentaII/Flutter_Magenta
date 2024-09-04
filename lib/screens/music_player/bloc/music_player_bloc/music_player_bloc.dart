@@ -16,10 +16,10 @@ part 'music_player_state.dart';
 class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   final PlayerHelper _playerHelper = PlayerHelper();
   final MusicPlayerRepository repository;
-  late PlayerState _playerState;
-  late final StreamSubscription<Duration> _positionSubscription;
-  late final StreamSubscription<PlayerState> _playerStateSubscription;
-  late final StreamSubscription<void> _playerCompleteSubscription;
+  PlayerState _playerState = PlayerState.stopped;
+  late StreamSubscription<Duration> _positionSubscription;
+  late StreamSubscription<PlayerState> _playerStateSubscription;
+  late StreamSubscription<void> _playerCompleteSubscription;
 
   MusicPlayerBloc({required this.repository}) : super(PlayerStateInitial()) {
     on<LoadingSong>(_loadingSong);
@@ -55,22 +55,25 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
         await _playerHelper.getTotalDuration() ?? Duration.zero;
     log('loading Song State : $totalDuration');
 
+    // await _playerCompleteSubscription.cancel();
     _playerCompleteSubscription = _playerHelper.onPlayerComplete.listen((_) {
       add(StopSong());
     });
 
+    // await _playerStateSubscription.cancel();
     _playerStateSubscription =
         _playerHelper.onPlayerStateChanged.listen((state) {
       log('Current player state: $state');
       _playerState = state;
     });
 
+    // await _positionSubscription.cancel();
     _positionSubscription = _playerHelper.onPositionChanged.listen((position) {
       log('listen position changed');
       add(UpdatePosition(position));
     });
 
-    emit(PlayerStateLoaded(totalDuration));
+    emit(PlayerStateLoaded(totalDuration, Duration.zero));
   }
 
   Future<void> _playSong(
@@ -79,9 +82,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   ) async {
     try {
       await _playerHelper.play();
-
-      // 发射初始的播放状态
       emit(PlayerStatePlaying(event.position));
+
     } catch (e) {
       emit(PlayerStateError(e.toString()));
     }
@@ -110,9 +112,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     ResumeSong event,
     Emitter<MusicPlayerState> emit,
   ) async {
-    if (state is PlayerStatePaused) {
+    if (state is PlayerStatePaused || _playerState == PlayerState.paused) {
       await _playerHelper.resume();
-      // log('_positionSubscription : $_positionSubscription');
       emit(PlayerStatePlaying(event.position));
     }
   }
@@ -131,16 +132,18 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   ) async {
     await _playerHelper.seek(event.position);
 
-    emit(state is PlayerStatePlaying
-        ? PlayerStatePlaying(event.position)
-        : PlayerStatePaused(event.position));
+    if (state is PlayerStatePlaying || _playerState == PlayerState.playing) {
+      emit(PlayerStatePlaying(event.position));
+    } else {
+      emit(PlayerStatePaused(event.position));
+    }
   }
 
-  void _disposeSong(
+  Future<void> _disposeSong(
     DisposeSong event,
     Emitter<MusicPlayerState> emit,
-  ) {
-    _playerHelper.dispose();
+  ) async {
+    await _playerHelper.stop();
   }
 
 // Future<void> _stopSong(

@@ -14,11 +14,12 @@ final class PlayerStateLoading extends MusicPlayerState {}
 
 final class PlayerStateLoaded extends MusicPlayerState {
   final Duration duration;
+  final Duration position;
 
-  const PlayerStateLoaded(this.duration);
+  const PlayerStateLoaded(this.duration, this.position);
 
   @override
-  List<Object?> get props => [duration];
+  List<Object?> get props => [duration, position];
 }
 
 final class PlayerStatePlaying extends MusicPlayerState {
