@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_magenta/screens/flutter_weather/views/weather/weather_view.dart';
 import 'package:flutter_magenta/screens/github_search/views/github_search_view.dart';
 import 'package:flutter_magenta/screens/home/widgets/home_list_item.dart';
-import 'package:flutter_magenta/screens/music_player/view/playlist_view.dart';
 
 import '../../../animation/animation.dart';
+import '../../music_player/view/playlist/playlist_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

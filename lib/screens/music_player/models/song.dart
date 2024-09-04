@@ -13,6 +13,13 @@ class Song extends Equatable {
     required this.audioPath,
   });
 
+  static const empty = Song(
+      songName: '',
+      artistName: '',
+      albumArtImagePath: '',
+      audioPath: ''
+  );
+
   @override
   List<Object?> get props =>
       [songName, artistName, albumArtImagePath, audioPath];
