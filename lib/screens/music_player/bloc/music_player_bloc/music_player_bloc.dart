@@ -17,9 +17,9 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   final PlayerHelper _playerHelper = PlayerHelper();
   final MusicPlayerRepository repository;
   PlayerState _playerState = PlayerState.stopped;
-  late StreamSubscription<Duration> _positionSubscription;
-  late StreamSubscription<PlayerState> _playerStateSubscription;
-  late StreamSubscription<void> _playerCompleteSubscription;
+  StreamSubscription<Duration>? _positionSubscription;
+  StreamSubscription<PlayerState>? _playerStateSubscription;
+  StreamSubscription<void>? _playerCompleteSubscription;
 
   MusicPlayerBloc({required this.repository}) : super(PlayerStateInitial()) {
     on<LoadingSong>(_loadingSong);
@@ -30,14 +30,16 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     on<StopSong>(_stopSong);
     on<SeekToPosition>(_seekToPosition);
     on<DisposeSong>(_disposeSong);
+    on<NextSong>(_nextSong);
+    on<PreviousSong>(_previousSong);
   }
 
   // 在Bloc dispose时取消订阅
   @override
   Future<void> close() {
-    _positionSubscription.cancel();
-    _playerStateSubscription.cancel();
-    _playerCompleteSubscription.cancel();
+    _positionSubscription?.cancel();
+    _playerStateSubscription?.cancel();
+    _playerCompleteSubscription?.cancel();
     _playerHelper.dispose();
     return super.close();
   }
@@ -55,25 +57,30 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
         await _playerHelper.getTotalDuration() ?? Duration.zero;
     log('loading Song State : $totalDuration');
 
-    // await _playerCompleteSubscription.cancel();
+    await _playerCompleteSubscription?.cancel();
     _playerCompleteSubscription = _playerHelper.onPlayerComplete.listen((_) {
       add(StopSong());
     });
 
-    // await _playerStateSubscription.cancel();
+    await _playerStateSubscription?.cancel();
     _playerStateSubscription =
         _playerHelper.onPlayerStateChanged.listen((state) {
       log('Current player state: $state');
       _playerState = state;
     });
 
-    // await _positionSubscription.cancel();
+    await _positionSubscription?.cancel();
     _positionSubscription = _playerHelper.onPositionChanged.listen((position) {
       log('listen position changed');
       add(UpdatePosition(position));
     });
 
-    emit(PlayerStateLoaded(totalDuration, Duration.zero));
+    emit(PlayerStateLoaded(event.song, totalDuration, Duration.zero));
+
+    log('is Played Directly: ${event.isPlayedDirectly}');
+    if (event.isPlayedDirectly) {
+      add(const PlaySong());
+    }
   }
 
   Future<void> _playSong(
@@ -83,7 +90,6 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     try {
       await _playerHelper.play();
       emit(PlayerStatePlaying(event.position));
-
     } catch (e) {
       emit(PlayerStateError(e.toString()));
     }
@@ -145,6 +151,31 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   ) async {
     await _playerHelper.stop();
   }
+
+  Future<void> _nextSong(
+    NextSong event,
+    Emitter<MusicPlayerState> emit,
+  ) async {
+    final int nextIndex = (event.currentIndex + 1) % event.songs.length;
+    log('Next Index: $nextIndex');
+    await _playerHelper.pause();
+    Future.delayed(Duration.zero, () {
+      add(LoadingSong(song: event.songs[nextIndex], isPlayedDirectly: event.isPlayedDirectly));
+    });
+  }
+
+  Future<void> _previousSong(
+      PreviousSong event,
+      Emitter<MusicPlayerState> emit,
+      ) async {
+    final int previousIndex = (event.currentIndex - 1 + event.songs.length) % event.songs.length;
+    log('Next Index: $previousIndex');
+    await _playerHelper.pause();
+    Future.delayed(Duration.zero, () {
+      add(LoadingSong(song: event.songs[previousIndex], isPlayedDirectly: event.isPlayedDirectly));
+    });
+  }
+
 
 // Future<void> _stopSong(
 //   StopSong event,

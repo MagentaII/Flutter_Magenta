@@ -13,13 +13,14 @@ final class PlayerStateInitial extends MusicPlayerState {}
 final class PlayerStateLoading extends MusicPlayerState {}
 
 final class PlayerStateLoaded extends MusicPlayerState {
+  final Song song;
   final Duration duration;
   final Duration position;
 
-  const PlayerStateLoaded(this.duration, this.position);
+  const PlayerStateLoaded(this.song, this.duration, this.position);
 
   @override
-  List<Object?> get props => [duration, position];
+  List<Object?> get props => [song, duration, position];
 }
 
 final class PlayerStatePlaying extends MusicPlayerState {
@@ -42,6 +43,17 @@ final class PlayerStatePaused extends MusicPlayerState {
 
 final class PlayerStateCompleted extends MusicPlayerState {}
 
+final class PlayerStateShuffleStatus extends MusicPlayerState {
+  final bool isShuffled;
+
+  const PlayerStateShuffleStatus(this.isShuffled);
+}
+
+final class PlayerStateRepeatStatus extends MusicPlayerState {
+  final bool isRepeating;
+
+  const PlayerStateRepeatStatus(this.isRepeating);
+}
 
 // final class PlayerStateStopped extends MusicPlayerState {
 //   const PlayerStateStopped({

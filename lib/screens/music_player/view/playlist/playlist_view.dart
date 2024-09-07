@@ -85,7 +85,11 @@ class _PlaylistBody extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PlayerView(song: song),
+                      builder: (context) => PlayerView(
+                        songs: state.songs,
+                        // song: song,
+                        currentIndex: index,
+                      ),
                     ),
                   );
                 },

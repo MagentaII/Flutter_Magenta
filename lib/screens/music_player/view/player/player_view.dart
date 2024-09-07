@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,16 +8,24 @@ import 'package:flutter_magenta/screens/music_player/models/song.dart';
 import '../../bloc/music_player_bloc/music_player_bloc.dart';
 
 class PlayerView extends StatelessWidget {
-  final Song song;
+  final List<Song> songs;
+  final int currentIndex; // Required for initial loading
 
-  const PlayerView({required this.song, super.key});
+  const PlayerView(
+      {required this.songs, required this.currentIndex, super.key});
 
   @override
   Widget build(BuildContext context) {
     Duration position = Duration.zero;
     Duration duration = Duration.zero;
+    String? albumArtImagePath;
+    String? songName;
+    String? artistName;
+    int? songIndex;
+    bool isShuffled = false;
+    bool isRepeating = false;
 
-    context.read<MusicPlayerBloc>().add(LoadingSong(song));
+    context.read<MusicPlayerBloc>().add(LoadingSong(song: songs[currentIndex]));
 
     String formatTime(Duration time) {
       String minutes = time.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -45,6 +54,10 @@ class PlayerView extends StatelessWidget {
           if (state is PlayerStateLoaded) {
             duration = state.duration;
             position = state.position;
+            albumArtImagePath = state.song.albumArtImagePath;
+            songName = state.song.songName;
+            artistName = state.song.artistName;
+            songIndex = songs.indexOf(state.song);
             log('state is PlaySong, duration : $duration');
           } else if (state is PlayerStatePlaying) {
             position = state.position;
@@ -115,7 +128,8 @@ class PlayerView extends StatelessWidget {
                             width: 330,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: AssetImage(song.albumArtImagePath))),
+                                    image: AssetImage(albumArtImagePath ??=
+                                        'assets/images/album_images/default_album_art.jpg'))),
                           ),
                           Row(
                             children: [
@@ -123,12 +137,13 @@ class PlayerView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    song.songName,
+                                    songName ??= 'Unknown Music Name....',
                                     style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text(song.artistName),
+                                  Text(
+                                      artistName ??= 'Unknown Artist Name....'),
                                 ],
                               )
                             ],
@@ -136,7 +151,7 @@ class PlayerView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Row(
@@ -147,13 +162,29 @@ class PlayerView extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 18, color: Color(0xFF5F4D3A)),
                           ),
-                          const Icon(
-                            Icons.shuffle,
-                            color: Color(0xFF5F4D3A),
+                          IconButton(
+                            icon: isShuffled
+                                ? const Icon(Icons.shuffle_rounded,
+                                    color: Color(
+                                      0xFF00EBE7,
+                                    ))
+                                : const Icon(Icons.shuffle_rounded,
+                                    color: Color(
+                                      0xFF5F4D3A,
+                                    )),
+                            onPressed: () {},
                           ),
-                          const Icon(
-                            Icons.repeat,
-                            color: Color(0xFF5F4D3A),
+                          IconButton(
+                            icon: isRepeating
+                                ? const Icon(Icons.repeat,
+                                    color: Color(
+                                      0xFF00EBE7,
+                                    ))
+                                : const Icon(Icons.repeat,
+                                    color: Color(
+                                      0xFF5F4D3A,
+                                    )),
+                            onPressed: () {},
                           ),
                           Text(
                             formatTime(duration),
@@ -163,7 +194,7 @@ class PlayerView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     Slider(
                       min: 0,
                       max: duration.inSeconds > 0
@@ -178,6 +209,11 @@ class PlayerView extends StatelessWidget {
                       onChanged: (value) {
                         context.read<MusicPlayerBloc>().add(
                             SeekToPosition(Duration(seconds: value.toInt())));
+                        // if (debounce?.isActive ?? false) debounce?.cancel();
+                        // debounce = Timer(const Duration(milliseconds: 300), () {
+                        //   context.read<MusicPlayerBloc>().add(
+                        //       SeekToPosition(Duration(seconds: value.toInt())));
+                        // });
                       },
                     ),
                     const SizedBox(height: 24),
@@ -186,7 +222,16 @@ class PlayerView extends StatelessWidget {
                       // 让图标均匀分布
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            if (state is PlayerStatePlaying) {
+                              context.read<MusicPlayerBloc>().add(PreviousSong(
+                                  songs, songIndex ??= currentIndex,
+                                  isPlayedDirectly: true));
+                            } else {
+                              context.read<MusicPlayerBloc>().add(PreviousSong(
+                                  songs, songIndex ??= currentIndex));
+                            }
+                          },
                           child: Container(
                             height: 60,
                             width: 60,
@@ -258,7 +303,8 @@ class PlayerView extends StatelessWidget {
                                 state is PlayerStatePlaying
                                     ? Icons.pause
                                     : Icons.play_arrow,
-                                key: ValueKey<bool>(state is PlayerStatePlaying),
+                                key:
+                                    ValueKey<bool>(state is PlayerStatePlaying),
                                 color: Colors.brown,
                                 size: 40,
                               ),
@@ -266,7 +312,16 @@ class PlayerView extends StatelessWidget {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            if (state is PlayerStatePlaying) {
+                              context.read<MusicPlayerBloc>().add(NextSong(
+                                  songs, songIndex ??= currentIndex,
+                                  isPlayedDirectly: true));
+                            } else {
+                              context.read<MusicPlayerBloc>().add(
+                                  NextSong(songs, songIndex ??= currentIndex));
+                            }
+                          },
                           child: Container(
                             height: 60,
                             width: 60,
