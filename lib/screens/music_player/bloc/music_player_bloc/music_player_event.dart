@@ -9,13 +9,14 @@ sealed class MusicPlayerEvent extends Equatable {
 
 
 final class LoadingSong extends MusicPlayerEvent {
-  final Song song;
+  final List<Song> songs;
+  final int currentIndex;
   final bool isPlayedDirectly;
 
-  const LoadingSong({required this.song, this.isPlayedDirectly = false});
+  const LoadingSong({required this.songs, required this.currentIndex, this.isPlayedDirectly = false});
 
   @override
-  List<Object?> get props => [song];
+  List<Object?> get props => [songs, currentIndex, isPlayedDirectly];
 }
 
 

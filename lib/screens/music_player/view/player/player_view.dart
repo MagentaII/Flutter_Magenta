@@ -25,7 +25,7 @@ class PlayerView extends StatelessWidget {
     bool isShuffled = false;
     bool isRepeating = false;
 
-    context.read<MusicPlayerBloc>().add(LoadingSong(song: songs[currentIndex]));
+    context.read<MusicPlayerBloc>().add(LoadingSong(songs: songs, currentIndex: currentIndex));
 
     String formatTime(Duration time) {
       String minutes = time.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -59,6 +59,9 @@ class PlayerView extends StatelessWidget {
             artistName = state.song.artistName;
             songIndex = songs.indexOf(state.song);
             log('state is PlaySong, duration : $duration');
+            if (state.isPlayedDirectly == true) {
+              context.read<MusicPlayerBloc>().add(const PlaySong());
+            }
           } else if (state is PlayerStatePlaying) {
             position = state.position;
           } else if (state is PlayerStatePaused) {

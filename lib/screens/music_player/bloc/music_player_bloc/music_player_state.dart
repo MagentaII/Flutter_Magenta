@@ -16,11 +16,12 @@ final class PlayerStateLoaded extends MusicPlayerState {
   final Song song;
   final Duration duration;
   final Duration position;
+  final bool isPlayedDirectly;
 
-  const PlayerStateLoaded(this.song, this.duration, this.position);
+  const PlayerStateLoaded(this.song, this.duration, this.position, this.isPlayedDirectly);
 
   @override
-  List<Object?> get props => [song, duration, position];
+  List<Object?> get props => [song, duration, position, isPlayedDirectly];
 }
 
 final class PlayerStatePlaying extends MusicPlayerState {

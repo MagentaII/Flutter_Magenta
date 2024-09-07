@@ -52,14 +52,16 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
 
     _playerHelper.setReleaseMode(ReleaseMode.stop);
 
-    await _playerHelper.setSource(event.song.audioPath);
-    final totalDuration =
+    await _playerHelper.setSource(event.songs[event.currentIndex].audioPath);
+    Duration totalDuration =
         await _playerHelper.getTotalDuration() ?? Duration.zero;
     log('loading Song State : $totalDuration');
 
     await _playerCompleteSubscription?.cancel();
     _playerCompleteSubscription = _playerHelper.onPlayerComplete.listen((_) {
-      add(StopSong());
+      log('-------------------------------Song Complete------------------------------------');
+      // add(StopSong());
+      add(NextSong(event.songs, event.currentIndex, isPlayedDirectly: true));
     });
 
     await _playerStateSubscription?.cancel();
@@ -75,18 +77,20 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
       add(UpdatePosition(position));
     });
 
-    emit(PlayerStateLoaded(event.song, totalDuration, Duration.zero));
+    log('-------------------------------is Played Directly: ${event.isPlayedDirectly}------------------------------------');
+    emit(PlayerStateLoaded(
+        event.songs[event.currentIndex], totalDuration, Duration.zero, event.isPlayedDirectly));
 
-    log('is Played Directly: ${event.isPlayedDirectly}');
-    if (event.isPlayedDirectly) {
-      add(const PlaySong());
-    }
+    // if (event.isPlayedDirectly) {
+    //   add(const PlaySong());
+    // }
   }
 
   Future<void> _playSong(
     PlaySong event,
     Emitter<MusicPlayerState> emit,
   ) async {
+    log('-------------------------------Play Song------------------------------------');
     try {
       await _playerHelper.play();
       emit(PlayerStatePlaying(event.position));
@@ -157,25 +161,32 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     Emitter<MusicPlayerState> emit,
   ) async {
     final int nextIndex = (event.currentIndex + 1) % event.songs.length;
+    log('-------------------------------Next Song : ${event.songs[nextIndex].songName}------------------------------------');
     log('Next Index: $nextIndex');
     await _playerHelper.pause();
     Future.delayed(Duration.zero, () {
-      add(LoadingSong(song: event.songs[nextIndex], isPlayedDirectly: event.isPlayedDirectly));
+      add(LoadingSong(
+          songs: event.songs,
+          currentIndex: nextIndex,
+          isPlayedDirectly: event.isPlayedDirectly));
     });
   }
 
   Future<void> _previousSong(
-      PreviousSong event,
-      Emitter<MusicPlayerState> emit,
-      ) async {
-    final int previousIndex = (event.currentIndex - 1 + event.songs.length) % event.songs.length;
+    PreviousSong event,
+    Emitter<MusicPlayerState> emit,
+  ) async {
+    final int previousIndex =
+        (event.currentIndex - 1 + event.songs.length) % event.songs.length;
     log('Next Index: $previousIndex');
     await _playerHelper.pause();
     Future.delayed(Duration.zero, () {
-      add(LoadingSong(song: event.songs[previousIndex], isPlayedDirectly: event.isPlayedDirectly));
+      add(LoadingSong(
+          songs: event.songs,
+          currentIndex: previousIndex,
+          isPlayedDirectly: event.isPlayedDirectly));
     });
   }
-
 
 // Future<void> _stopSong(
 //   StopSong event,
