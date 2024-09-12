@@ -11,8 +11,7 @@ class PlayerView extends StatelessWidget {
   final List<Song> songs;
   final int currentIndex; // Required for initial loading
 
-  const PlayerView(
-      {required this.songs, required this.currentIndex, super.key});
+  const PlayerView({required this.songs, required this.currentIndex, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +21,12 @@ class PlayerView extends StatelessWidget {
     String? songName;
     String? artistName;
     int? songIndex;
-    bool isShuffled = false;
-    bool isRepeating = false;
+    bool isShuffle = false;
+    bool isRepeat = false;
 
-    context.read<MusicPlayerBloc>().add(LoadingSong(songs: songs, currentIndex: currentIndex));
+    context
+        .read<MusicPlayerBloc>()
+        .add(LoadingSong(songs: songs, currentIndex: currentIndex));
 
     String formatTime(Duration time) {
       String minutes = time.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -64,12 +65,17 @@ class PlayerView extends StatelessWidget {
             }
           } else if (state is PlayerStatePlaying) {
             position = state.position;
+            isShuffle = state.isShuffle;
+            isRepeat = state.isRepeat;
+            log('PlayerStatePlaying, is shuffle? $isShuffle');
           } else if (state is PlayerStatePaused) {
             position = state.position;
+            isShuffle = state.isShuffle;
+            isRepeat = state.isRepeat;
+            log('PlayerStatePaused, is shuffle? $isShuffle');
           } else if (state is PlayerStateCompleted) {
             position = duration;
           }
-
           log('state is PlaySong, duration again : $duration');
 
           return Scaffold(
@@ -166,28 +172,38 @@ class PlayerView extends StatelessWidget {
                                 fontSize: 18, color: Color(0xFF5F4D3A)),
                           ),
                           IconButton(
-                            icon: isShuffled
+                            icon: isShuffle == true
                                 ? const Icon(Icons.shuffle_rounded,
                                     color: Color(
-                                      0xFF00EBE7,
-                                    ))
+                                      0xFF008383,
+                                    ), size: 28,)
                                 : const Icon(Icons.shuffle_rounded,
                                     color: Color(
                                       0xFF5F4D3A,
-                                    )),
-                            onPressed: () {},
+                                    ), size: 28,),
+                            onPressed: () {
+                              isShuffle = !isShuffle;
+                              context
+                                  .read<MusicPlayerBloc>()
+                                  .add(ToggleShuffleSongs(position, isShuffle));
+                            },
                           ),
                           IconButton(
-                            icon: isRepeating
+                            icon: isRepeat == true
                                 ? const Icon(Icons.repeat,
-                                    color: Color(
-                                      0xFF00EBE7,
-                                    ))
+                              color: Color(
+                                0xFF008383,
+                              ), size: 28,)
                                 : const Icon(Icons.repeat,
-                                    color: Color(
-                                      0xFF5F4D3A,
-                                    )),
-                            onPressed: () {},
+                              color: Color(
+                                0xFF5F4D3A,
+                              ), size: 28,),
+                            onPressed: () {
+                              isRepeat = !isRepeat;
+                              context
+                                  .read<MusicPlayerBloc>()
+                                  .add(ToggleRepeatSong(position, isRepeat));
+                            },
                           ),
                           Text(
                             formatTime(duration),
@@ -212,11 +228,6 @@ class PlayerView extends StatelessWidget {
                       onChanged: (value) {
                         context.read<MusicPlayerBloc>().add(
                             SeekToPosition(Duration(seconds: value.toInt())));
-                        // if (debounce?.isActive ?? false) debounce?.cancel();
-                        // debounce = Timer(const Duration(milliseconds: 300), () {
-                        //   context.read<MusicPlayerBloc>().add(
-                        //       SeekToPosition(Duration(seconds: value.toInt())));
-                        // });
                       },
                     ),
                     const SizedBox(height: 24),

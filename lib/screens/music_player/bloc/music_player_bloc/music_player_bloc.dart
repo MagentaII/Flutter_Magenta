@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 
-// import 'dart:math';
+import 'dart:math' hide log;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_magenta/screens/music_player/helper/player_helper.dart';
 import 'package:flutter_magenta/screens/music_player/repository/music_player_repository.dart';
+import '../../helper/player_helper.dart';
 import '../../models/song.dart';
 
 part 'music_player_event.dart';
@@ -14,7 +14,7 @@ part 'music_player_event.dart';
 part 'music_player_state.dart';
 
 class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
-  final PlayerHelper _playerHelper = PlayerHelper();
+  final _playerHelper = PlayerHelper();
   final MusicPlayerRepository repository;
   PlayerState _playerState = PlayerState.stopped;
   StreamSubscription<Duration>? _positionSubscription;
@@ -32,6 +32,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     on<DisposeSong>(_disposeSong);
     on<NextSong>(_nextSong);
     on<PreviousSong>(_previousSong);
+    on<ToggleShuffleSongs>(_toggleShuffleSongs);
+    on<ToggleRepeatSong>(_toggleRepeatSong);
   }
 
   // 在Bloc dispose时取消订阅
@@ -49,9 +51,18 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     Emitter<MusicPlayerState> emit,
   ) async {
     emit(PlayerStateLoading());
+    log('-------------------------------_playerHelper.setReleaseMode1------------------------------------');
+    if (_playerHelper.isRepeatSongs == true) {
+      log('-------------------------------LoadingSong------------------------------------');
+      log('-------------------------------_playerHelper.setReleaseMode：loop------------------------------------');
+      _playerHelper.setReleaseMode(ReleaseMode.loop);
+    } else {
+      log('-------------------------------LoadingSong------------------------------------');
+      log('-------------------------------_playerHelper.setReleaseMode：stop------------------------------------');
+      _playerHelper.setReleaseMode(ReleaseMode.stop);
+    }
 
-    _playerHelper.setReleaseMode(ReleaseMode.stop);
-
+    log('-------------------------------_playerHelper.setSource1------------------------------------');
     await _playerHelper.setSource(event.songs[event.currentIndex].audioPath);
     Duration totalDuration =
         await _playerHelper.getTotalDuration() ?? Duration.zero;
@@ -78,8 +89,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     });
 
     log('-------------------------------is Played Directly: ${event.isPlayedDirectly}------------------------------------');
-    emit(PlayerStateLoaded(
-        event.songs[event.currentIndex], totalDuration, Duration.zero, event.isPlayedDirectly));
+    emit(PlayerStateLoaded(event.songs[event.currentIndex], totalDuration,
+        Duration.zero, event.isPlayedDirectly));
 
     // if (event.isPlayedDirectly) {
     //   add(const PlaySong());
@@ -93,7 +104,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     log('-------------------------------Play Song------------------------------------');
     try {
       await _playerHelper.play();
-      emit(PlayerStatePlaying(event.position));
+      emit(PlayerStatePlaying(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
     } catch (e) {
       emit(PlayerStateError(e.toString()));
     }
@@ -104,7 +116,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     Emitter<MusicPlayerState> emit,
   ) async {
     if (_playerState == PlayerState.playing && state is PlayerStatePlaying) {
-      emit(PlayerStatePlaying(event.position));
+      emit(PlayerStatePlaying(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
     }
   }
 
@@ -114,7 +127,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   ) async {
     if (state is PlayerStatePlaying) {
       await _playerHelper.pause();
-      emit(PlayerStatePaused(event.position));
+      emit(PlayerStatePaused(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
     }
   }
 
@@ -124,7 +138,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   ) async {
     if (state is PlayerStatePaused || _playerState == PlayerState.paused) {
       await _playerHelper.resume();
-      emit(PlayerStatePlaying(event.position));
+      emit(PlayerStatePlaying(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
     }
   }
 
@@ -143,9 +158,11 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     await _playerHelper.seek(event.position);
 
     if (state is PlayerStatePlaying || _playerState == PlayerState.playing) {
-      emit(PlayerStatePlaying(event.position));
+      emit(PlayerStatePlaying(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
     } else {
-      emit(PlayerStatePaused(event.position));
+      emit(PlayerStatePaused(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
     }
   }
 
@@ -160,8 +177,21 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     NextSong event,
     Emitter<MusicPlayerState> emit,
   ) async {
-    final int nextIndex = (event.currentIndex + 1) % event.songs.length;
-    log('-------------------------------Next Song : ${event.songs[nextIndex].songName}------------------------------------');
+    int nextIndex = -1;
+    if (_playerHelper.isShuffleSongs) {
+      Random random = Random();
+      int randomIndex;
+
+      do {
+        randomIndex = random.nextInt(event.songs.length);
+      } while (randomIndex == event.currentIndex);
+
+      nextIndex = randomIndex;
+      log('-------------------------------Shuffled Next Song : ${event.songs[nextIndex].songName}------------------------------------');
+    } else {
+      nextIndex = (event.currentIndex + 1) % event.songs.length;
+      log('-------------------------------Next Song : ${event.songs[nextIndex].songName}------------------------------------');
+    }
     log('Next Index: $nextIndex');
     await _playerHelper.pause();
     Future.delayed(Duration.zero, () {
@@ -186,6 +216,43 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
           currentIndex: previousIndex,
           isPlayedDirectly: event.isPlayedDirectly));
     });
+  }
+
+  Future<void> _toggleShuffleSongs(
+    ToggleShuffleSongs event,
+    Emitter<MusicPlayerState> emit,
+  ) async {
+    _playerHelper.isShuffleSongs = event.isShuffle;
+    if (_playerState == PlayerState.playing) {
+      emit(PlayerStatePlaying(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
+    } else {
+      emit(PlayerStatePaused(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
+    }
+  }
+
+  Future<void> _toggleRepeatSong(
+    ToggleRepeatSong event,
+    Emitter<MusicPlayerState> emit,
+  ) async {
+    _playerHelper.isRepeatSongs = event.isRepeat;
+    if (_playerHelper.isRepeatSongs == true) {
+      log('-------------------------------ToggleRepeatSong------------------------------------');
+      log('-------------------------------_playerHelper.setReleaseMode：loop------------------------------------');
+      _playerHelper.setReleaseMode(ReleaseMode.loop);
+    } else {
+      log('-------------------------------ToggleRepeatSong------------------------------------');
+      log('-------------------------------_playerHelper.setReleaseMode：stop------------------------------------');
+      _playerHelper.setReleaseMode(ReleaseMode.stop);
+    }
+    if (_playerState == PlayerState.playing) {
+      emit(PlayerStatePlaying(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
+    } else {
+      emit(PlayerStatePaused(event.position, _playerHelper.isShuffleSongs,
+          _playerHelper.isRepeatSongs));
+    }
   }
 
 // Future<void> _stopSong(

@@ -92,9 +92,25 @@ final class PreviousSong extends MusicPlayerEvent {
   List<Object?> get props => [songs, currentIndex, isPlayedDirectly];
 }
 
-final class ToggleShuffleSongs extends MusicPlayerEvent {}
+final class ToggleShuffleSongs extends MusicPlayerEvent {
+  final Duration position;
+  final bool isShuffle;
 
-final class ToggleRepeatSong extends MusicPlayerEvent {}
+  const ToggleShuffleSongs(this.position, this.isShuffle);
+
+  @override
+  List<Object?> get props => [position, isShuffle];
+}
+
+final class ToggleRepeatSong extends MusicPlayerEvent {
+  final Duration position;
+  final bool isRepeat;
+
+  const ToggleRepeatSong(this.position, this.isRepeat);
+
+  @override
+  List<Object?> get props => [position, isRepeat];
+}
 
 // final class NextSong extends MusicPlayerEvent {
 //   final Song song;

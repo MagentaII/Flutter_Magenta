@@ -3,11 +3,10 @@ import 'dart:developer';
 import 'package:audioplayers/audioplayers.dart';
 
 class PlayerHelper {
+
   final AudioPlayer _audioPlayer = AudioPlayer();
-  // final MusicPlayerRepository _repository = MusicPlayerRepository();
-  //
-  // // int _currentIndex = -1; // 当前播放的歌曲索引
-  // bool _repeatMode = false; // 当前重复播放模式
+  bool isShuffleSongs = false;
+  bool isRepeatSongs = false;
 
   Stream<Duration> get onDurationChanged => _audioPlayer.onDurationChanged;
 
@@ -15,7 +14,8 @@ class PlayerHelper {
 
   Stream<void> get onPlayerComplete => _audioPlayer.onPlayerComplete;
 
-  Stream<PlayerState> get onPlayerStateChanged => _audioPlayer.onPlayerStateChanged;
+  Stream<PlayerState> get onPlayerStateChanged =>
+      _audioPlayer.onPlayerStateChanged;
 
   // total duration
   Future<Duration?> getTotalDuration() async {
@@ -23,7 +23,11 @@ class PlayerHelper {
   }
 
   Future<void> setSource(String url) async {
-    await _audioPlayer.setSource(AssetSource(url));
+    try {
+      await _audioPlayer.setSource(AssetSource(url));
+    } catch (e) {
+      log('-------------------------------Error setting source: $e------------------------------------');
+    }
   }
 
   void setReleaseMode(ReleaseMode releaseMode) {
@@ -63,40 +67,35 @@ class PlayerHelper {
   }
 }
 
-  // // 设置重复播放模式
-  // void setRepeatMode(bool shouldRepeat) {
-  //   _repeatMode = shouldRepeat;
-  //   if (shouldRepeat) {
-  //     // 使用 AudioPlayer 的 setReleaseMode 方法来设置循环播放
-  //     _audioPlayer.setReleaseMode(ReleaseMode.loop);
-  //   } else {
-  //     _audioPlayer.setReleaseMode(ReleaseMode.release);
-  //   }
-  // }
-
-
-
-
+// // 设置重复播放模式
+// void setRepeatMode(bool shouldRepeat) {
+//   _repeatMode = shouldRepeat;
+//   if (shouldRepeat) {
+//     // 使用 AudioPlayer 的 setReleaseMode 方法来设置循环播放
+//     _audioPlayer.setReleaseMode(ReleaseMode.loop);
+//   } else {
+//     _audioPlayer.setReleaseMode(ReleaseMode.release);
+//   }
+// }
 
 // // 获取播放列表
-  // List<Song> getPlaylist() {
-  //   return _repository.getPlaylist(); // 返回一个不可修改的播放列表
-  // }
-  //
-  // // 获取下一首歌曲
-  // Song? getNextSong(Song currentSong) {
-  //   return _repository.getNextSong(currentSong);
-  // }
-  //
-  // // 获取上一首歌曲
-  // Song? getPreviousSong(Song currentSong) {
-  //   return _repository.getPreviousSong(currentSong);
-  // }
+// List<Song> getPlaylist() {
+//   return _repository.getPlaylist(); // 返回一个不可修改的播放列表
+// }
+//
+// // 获取下一首歌曲
+// Song? getNextSong(Song currentSong) {
+//   return _repository.getNextSong(currentSong);
+// }
+//
+// // 获取上一首歌曲
+// Song? getPreviousSong(Song currentSong) {
+//   return _repository.getPreviousSong(currentSong);
+// }
 
-  // // 设置当前播放的歌曲索引
-  // void setCurrentIndex(int index) {
-  //   if (index >= 0 && index < _repository.getPlaylist().length) {
-  //     _currentIndex = index;
-  //   }
-  // }
-
+// // 设置当前播放的歌曲索引
+// void setCurrentIndex(int index) {
+//   if (index >= 0 && index < _repository.getPlaylist().length) {
+//     _currentIndex = index;
+//   }
+// }
