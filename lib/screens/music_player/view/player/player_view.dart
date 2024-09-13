@@ -59,7 +59,7 @@ class PlayerView extends StatelessWidget {
             songName = state.song.songName;
             artistName = state.song.artistName;
             songIndex = songs.indexOf(state.song);
-            log('state is PlaySong, duration : $duration');
+            log('(UI Layer) state is PlaySong, duration : $duration');
             if (state.isPlayedDirectly == true) {
               context.read<MusicPlayerBloc>().add(const PlaySong());
             }
@@ -67,16 +67,16 @@ class PlayerView extends StatelessWidget {
             position = state.position;
             isShuffle = state.isShuffle;
             isRepeat = state.isRepeat;
-            log('PlayerStatePlaying, is shuffle? $isShuffle');
+            log('(UI Layer) PlayerStatePlaying, is shuffle? $isShuffle');
           } else if (state is PlayerStatePaused) {
             position = state.position;
             isShuffle = state.isShuffle;
             isRepeat = state.isRepeat;
-            log('PlayerStatePaused, is shuffle? $isShuffle');
+            log('(UI Layer) PlayerStatePaused, is shuffle? $isShuffle');
           } else if (state is PlayerStateCompleted) {
             position = duration;
           }
-          log('state is PlaySong, duration again : $duration');
+          log('(UI Layer) state is PlaySong, duration again : $duration');
 
           return Scaffold(
             backgroundColor: const Color(0xFFFFF5EE),

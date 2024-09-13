@@ -51,18 +51,18 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     Emitter<MusicPlayerState> emit,
   ) async {
     emit(PlayerStateLoading());
-    log('-------------------------------_playerHelper.setReleaseMode1------------------------------------');
+    log('(Bloc) _playerHelper.setReleaseMode1');
     if (_playerHelper.isRepeatSongs == true) {
-      log('-------------------------------LoadingSong------------------------------------');
-      log('-------------------------------_playerHelper.setReleaseMode：loop------------------------------------');
+      log('(Bloc) LoadingSong');
+      log('(Bloc) _playerHelper.setReleaseMode：loop');
       _playerHelper.setReleaseMode(ReleaseMode.loop);
     } else {
-      log('-------------------------------LoadingSong------------------------------------');
-      log('-------------------------------_playerHelper.setReleaseMode：stop------------------------------------');
+      log('(Bloc) LoadingSong');
+      log('(Bloc) _playerHelper.setReleaseMode：stop');
       _playerHelper.setReleaseMode(ReleaseMode.stop);
     }
 
-    log('-------------------------------_playerHelper.setSource1------------------------------------');
+    log('(Bloc) _playerHelper.setSource1');
     await _playerHelper.setSource(event.songs[event.currentIndex].audioPath);
     Duration totalDuration =
         await _playerHelper.getTotalDuration() ?? Duration.zero;
@@ -70,7 +70,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
 
     await _playerCompleteSubscription?.cancel();
     _playerCompleteSubscription = _playerHelper.onPlayerComplete.listen((_) {
-      log('-------------------------------Song Complete------------------------------------');
+      log('(Bloc) Song Complete');
       // add(StopSong());
       add(NextSong(event.songs, event.currentIndex, isPlayedDirectly: true));
     });
@@ -78,17 +78,17 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     await _playerStateSubscription?.cancel();
     _playerStateSubscription =
         _playerHelper.onPlayerStateChanged.listen((state) {
-      log('Current player state: $state');
+      log('(Bloc) Current player state: $state');
       _playerState = state;
     });
 
     await _positionSubscription?.cancel();
     _positionSubscription = _playerHelper.onPositionChanged.listen((position) {
-      log('listen position changed');
+      log('(Bloc) listen position changed');
       add(UpdatePosition(position));
     });
 
-    log('-------------------------------is Played Directly: ${event.isPlayedDirectly}------------------------------------');
+    log('(Bloc) is Played Directly: ${event.isPlayedDirectly}');
     emit(PlayerStateLoaded(event.songs[event.currentIndex], totalDuration,
         Duration.zero, event.isPlayedDirectly));
 
@@ -101,7 +101,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     PlaySong event,
     Emitter<MusicPlayerState> emit,
   ) async {
-    log('-------------------------------Play Song------------------------------------');
+    log('(Bloc) Play Song');
     try {
       await _playerHelper.play();
       emit(PlayerStatePlaying(event.position, _playerHelper.isShuffleSongs,
@@ -187,12 +187,12 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
       } while (randomIndex == event.currentIndex);
 
       nextIndex = randomIndex;
-      log('-------------------------------Shuffled Next Song : ${event.songs[nextIndex].songName}------------------------------------');
+      log('(Bloc) Shuffled Next Song : ${event.songs[nextIndex].songName}');
     } else {
       nextIndex = (event.currentIndex + 1) % event.songs.length;
-      log('-------------------------------Next Song : ${event.songs[nextIndex].songName}------------------------------------');
+      log('(Bloc) Next Song : ${event.songs[nextIndex].songName}');
     }
-    log('Next Index: $nextIndex');
+    log('(Bloc) Next Index: $nextIndex');
     await _playerHelper.pause();
     Future.delayed(Duration.zero, () {
       add(LoadingSong(
@@ -208,7 +208,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   ) async {
     final int previousIndex =
         (event.currentIndex - 1 + event.songs.length) % event.songs.length;
-    log('Next Index: $previousIndex');
+    log('(Bloc) Previous Index: $previousIndex');
     await _playerHelper.pause();
     Future.delayed(Duration.zero, () {
       add(LoadingSong(
@@ -238,12 +238,12 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   ) async {
     _playerHelper.isRepeatSongs = event.isRepeat;
     if (_playerHelper.isRepeatSongs == true) {
-      log('-------------------------------ToggleRepeatSong------------------------------------');
-      log('-------------------------------_playerHelper.setReleaseMode：loop------------------------------------');
+      log('(Bloc) ToggleRepeatSong');
+      log('(Bloc) _playerHelper.setReleaseMode：loop');
       _playerHelper.setReleaseMode(ReleaseMode.loop);
     } else {
-      log('-------------------------------ToggleRepeatSong------------------------------------');
-      log('-------------------------------_playerHelper.setReleaseMode：stop------------------------------------');
+      log('(Bloc) ToggleRepeatSong');
+      log('(Bloc) _playerHelper.setReleaseMode：stop');
       _playerHelper.setReleaseMode(ReleaseMode.stop);
     }
     if (_playerState == PlayerState.playing) {
@@ -254,201 +254,4 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
           _playerHelper.isRepeatSongs));
     }
   }
-
-// Future<void> _stopSong(
-//   StopSong event,
-//   Emitter<MusicPlayerState> emit,
-// ) async {
-//   if (state is PlayerStatePlaying || state is PlayerStatePaused) {
-//     await _playerHelper.stop();
-//     final currentSong = state.song;
-//     emit(PlayerStateStopped(song: currentSong));
-//   }
-// }
-//
-// Future<void> _seekToPosition(
-//   SeekToPosition event,
-//   Emitter<MusicPlayerState> emit,
-// ) async {
-//   if (state is PlayerStatePlaying ||
-//       state is PlayerStatePaused ||
-//       state is PlayerStateSeeking) {
-//     final currentSong = state.song;
-//
-//     // 调用播放器的 seek 方法，将进度调整到指定位置
-//     await _playerHelper.seek(event.position);
-//
-//     // 发射新的状态，更新到指定位置
-//     emit(PlayerStateSeeking(
-//       song: currentSong,
-//       position: event.position,
-//     ));
-//
-//     // 如果之前是播放状态，重新发射播放状态，确保播放继续
-//     if (state is PlayerStatePlaying) {
-//       emit(PlayerStatePlaying(
-//         song: currentSong,
-//         position: event.position,
-//       ));
-//     }
-//   }
-// }
-//
-// Future<void> _updateDuration(
-//   UpdateDuration event,
-//   Emitter<MusicPlayerState> emit,
-// ) async {
-//   if (state is PlayerStatePlaying ||
-//       state is PlayerStatePaused ||
-//       state is PlayerStateSeeking) {
-//     final currentSong = state.song;
-//     final currentPosition = state.position;
-//
-//     // 发射新的状态，更新到指定的时长
-//     emit(PlayerStatePlaying(
-//       song: currentSong,
-//       position: currentPosition,
-//     ));
-//   }
-// }
-//
-// Future<void> _songCompleted(
-//   SongCompleted event,
-//   Emitter<MusicPlayerState> emit,
-// ) async {
-//   if (state is PlayerStatePlaying ||
-//       state is PlayerStatePaused ||
-//       state is PlayerStateSeeking) {
-//     final currentSong = state.song;
-//
-//     // 发射歌曲完成状态
-//     emit(PlayerStateCompleted(song: currentSong));
-//   }
-// }
-//
-// Future<void> _nextSong(
-//   NextSong event,
-//   Emitter<MusicPlayerState> emit,
-// ) async {
-//   try {
-//     if (state is PlayerStatePlaying ||
-//         state is PlayerStatePaused ||
-//         state is PlayerStateSeeking) {
-//       // 这里假设你有一个方法来获取下一首歌曲
-//       final currentSong = state.song;
-//       final nextSong = _playerHelper.getNextSong(currentSong!); // 你需要实现这个方法
-//
-//       // 停止当前歌曲
-//       await _playerHelper.stop();
-//
-//       await _playerHelper.play();
-//
-//       emit(PlayerStatePlaying(
-//         song: nextSong,
-//         position: Duration.zero, // 新歌曲开始时位置是0
-//         // duration: await _playerHelper.getTotalDuration() ?? Duration.zero,
-//       ));
-//     }
-//   } catch (e) {
-//     print('Error switching to next song: $e');
-//     // 你可以在这里处理错误情况，例如发射错误状态或通知用户
-//   }
-// }
-//
-// Future<void> _previousSong(
-//   PreviousSong event,
-//   Emitter<MusicPlayerState> emit,
-// ) async {
-//   try {
-//     if (state is PlayerStatePlaying ||
-//         state is PlayerStatePaused ||
-//         state is PlayerStateSeeking) {
-//       // 获取上一首歌曲，这个方法需要你实现
-//       final currentSong = state.song;
-//       final previousSong =
-//           _playerHelper.getPreviousSong(currentSong!); // 你需要实现这个方法
-//
-//       // 停止当前歌曲
-//       await _playerHelper.stop();
-//
-//       // 播放上一首歌曲
-//       await _playerHelper.play();
-//
-//       // 发射播放状态，表示播放的是上一首歌曲
-//       emit(PlayerStatePlaying(
-//         song: previousSong,
-//         position: Duration.zero, // 新歌曲开始时位置是0
-//         // duration: await _playerHelper.getTotalDuration() ?? Duration.zero,
-//       ));
-//     }
-//   } catch (e) {
-//     print('Error switching to previous song: $e');
-//     // 你可以在这里处理错误情况，例如发射错误状态或通知用户
-//   }
-// }
-//
-// Future<void> _shuffleSongs(
-//   ShuffleSongs event,
-//   Emitter<MusicPlayerState> emit,
-// ) async {
-//   try {
-//     if (state is PlayerStatePlaying || state is PlayerStatePaused) {
-//       // 获取当前播放列表，假设你有一个方法可以获取这个列表
-//       final List<Song> playlist = _playerHelper.getPlaylist(); // 你需要实现这个方法
-//
-//       // 打乱播放列表
-//       final List<Song> shuffledPlaylist = List.from(playlist);
-//       shuffledPlaylist.shuffle(Random());
-//
-//       // 停止当前歌曲
-//       await _playerHelper.stop();
-//
-//       // 播放打乱后的第一首歌曲
-//       final Song firstSong = shuffledPlaylist.first;
-//       await _playerHelper.play();
-//
-//       // 发射新的播放状态，表示播放的是打乱后的第一首歌曲
-//       emit(PlayerStatePlaying(
-//         song: firstSong,
-//         position: Duration.zero, // 新歌曲开始时位置是0
-//         // duration: await _playerHelper.getTotalDuration() ?? Duration.zero,
-//       ));
-//     }
-//   } catch (e) {
-//     print('Error shuffling songs: $e');
-//     // 你可以在这里处理错误情况，例如发射错误状态或通知用户
-//   }
-// }
-//
-// Future<void> _repeatSong(
-//   RepeatSong event,
-//   Emitter<MusicPlayerState> emit,
-// ) async {
-//   try {
-//     if (state is PlayerStatePlaying || state is PlayerStatePaused) {
-//       final currentState = state as MusicPlayerState;
-//       final Song currentSong = currentState.song!;
-//
-//       // 更新播放设置为重复播放当前歌曲
-//       // 这里可以设置一个标记来表示需要重复播放
-//       _playerHelper.setRepeatMode(true);
-//
-//       // 如果当前歌曲已经在播放中，重新播放它
-//       if (state is PlayerStatePlaying) {
-//         await _playerHelper.stop(); // 停止当前歌曲
-//         await _playerHelper.play(); // 重新播放当前歌曲
-//       }
-//
-//       // 发射新的播放状态，表示当前歌曲设置为重复播放
-//       emit(PlayerStatePlaying(
-//         song: currentSong,
-//         position: currentState.position,
-//         // duration: currentState.duration,
-//       ));
-//     }
-//   } catch (e) {
-//     print('Error setting repeat mode: $e');
-//     // 处理错误情况，例如发射错误状态或通知用户
-//   }
-// }
 }

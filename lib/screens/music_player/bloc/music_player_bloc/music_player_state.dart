@@ -49,32 +49,6 @@ final class PlayerStatePaused extends MusicPlayerState {
 final class PlayerStateCompleted extends MusicPlayerState {}
 
 
-// final class PlayerStateShuffleStatus extends MusicPlayerState {
-//   final bool isShuffled;
-//
-//   const PlayerStateShuffleStatus(this.isShuffled);
-// }
-//
-// final class PlayerStateRepeatStatus extends MusicPlayerState {
-//   final bool isRepeating;
-//
-//   const PlayerStateRepeatStatus(this.isRepeating);
-// }
-
-// final class PlayerStateStopped extends MusicPlayerState {
-//   const PlayerStateStopped({
-//     required super.song,
-//   });
-// }
-//
-// final class PlayerStateSeeking extends MusicPlayerState {
-//   const PlayerStateSeeking({
-//     required super.song,
-//     required super.position,
-//   });
-// }
-
-
 final class PlayerStateError extends MusicPlayerState {
   final String error;
 
