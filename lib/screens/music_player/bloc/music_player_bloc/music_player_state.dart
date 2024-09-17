@@ -10,7 +10,14 @@ sealed class MusicPlayerState extends Equatable {
 
 final class PlayerStateInitial extends MusicPlayerState {}
 
-final class PlayerStateLoading extends MusicPlayerState {}
+final class PlayerStateLoading extends MusicPlayerState {
+  final Song song;
+
+  const PlayerStateLoading(this.song);
+
+  @override
+  List<Object?> get props => [song];
+}
 
 final class PlayerStateLoaded extends MusicPlayerState {
   final Song song;

@@ -11,7 +11,8 @@ class PlayerView extends StatelessWidget {
   final List<Song> songs;
   final int currentIndex; // Required for initial loading
 
-  const PlayerView({required this.songs, required this.currentIndex, super.key});
+  const PlayerView(
+      {required this.songs, required this.currentIndex, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +53,13 @@ class PlayerView extends StatelessWidget {
       },
       child: BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
         builder: (context, state) {
-          if (state is PlayerStateLoaded) {
-            duration = state.duration;
-            position = state.position;
+          if (state is PlayerStateLoading) {
             albumArtImagePath = state.song.albumArtImagePath;
             songName = state.song.songName;
             artistName = state.song.artistName;
+          } else if (state is PlayerStateLoaded) {
+            duration = state.duration;
+            position = state.position;
             songIndex = songs.indexOf(state.song);
             log('(UI Layer) state is PlaySong, duration : $duration');
             if (state.isPlayedDirectly == true) {
@@ -173,14 +175,20 @@ class PlayerView extends StatelessWidget {
                           ),
                           IconButton(
                             icon: isShuffle == true
-                                ? const Icon(Icons.shuffle_rounded,
+                                ? const Icon(
+                                    Icons.shuffle_rounded,
                                     color: Color(
                                       0xFF008383,
-                                    ), size: 28,)
-                                : const Icon(Icons.shuffle_rounded,
+                                    ),
+                                    size: 28,
+                                  )
+                                : const Icon(
+                                    Icons.shuffle_rounded,
                                     color: Color(
                                       0xFF5F4D3A,
-                                    ), size: 28,),
+                                    ),
+                                    size: 28,
+                                  ),
                             onPressed: () {
                               isShuffle = !isShuffle;
                               context
@@ -190,14 +198,20 @@ class PlayerView extends StatelessWidget {
                           ),
                           IconButton(
                             icon: isRepeat == true
-                                ? const Icon(Icons.repeat,
-                              color: Color(
-                                0xFF008383,
-                              ), size: 28,)
-                                : const Icon(Icons.repeat,
-                              color: Color(
-                                0xFF5F4D3A,
-                              ), size: 28,),
+                                ? const Icon(
+                                    Icons.repeat,
+                                    color: Color(
+                                      0xFF008383,
+                                    ),
+                                    size: 28,
+                                  )
+                                : const Icon(
+                                    Icons.repeat,
+                                    color: Color(
+                                      0xFF5F4D3A,
+                                    ),
+                                    size: 28,
+                                  ),
                             onPressed: () {
                               isRepeat = !isRepeat;
                               context

@@ -50,7 +50,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     LoadingSong event,
     Emitter<MusicPlayerState> emit,
   ) async {
-    emit(PlayerStateLoading());
+    emit(PlayerStateLoading(event.songs[event.currentIndex]));
     log('(Bloc) _playerHelper.setReleaseMode1');
     if (_playerHelper.isRepeatSongs == true) {
       log('(Bloc) LoadingSong');
