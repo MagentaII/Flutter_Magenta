@@ -10,6 +10,23 @@ This project consolidates my previous simple Flutter apps into one application.
 - **Flutter Weather** - View weather information using a weather API.
 - **Music Player** - simple music player, The player includes features for shuffle, repeat, play, pause, and seekable
 
+## Screenshots
+
+### GitHub Search
+![Home](screenshots/Home/Apps.png)
+![Home](screenshots/Home/Profile.png)
+![Home](screenshots/Home/Profile_Image_Picker.png)
+
+### Flutter Weather
+![Weather Search](screenshots/Weather_Search/Weather_Search.png)
+![Weather Search](screenshots/Weather_Search/Weather_Search_result.png)
+![Weather Search](screenshots/Weather_Search/Weather_Search_ToggleCorF.png)
+
+### Music Player
+![Music Player](screenshots/Music_Player/Music_Player_Playlist.png)
+![Music Player](screenshots/Music_Player/Music_Player_PauseSong.png)
+![Music Player](screenshots/Music_Player/Music_Player_PlaySong.png)
+
 ## Installation
 
 To get started with this project, follow these steps:
