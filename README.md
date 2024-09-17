@@ -12,10 +12,15 @@ This project consolidates my previous simple Flutter apps into one application.
 
 ## Screenshots
 
-### GitHub Search
+### Home
 
 | ![Home](screenshots/Home/Apps.png) | ![Home](screenshots/Home/Profile.png) | ![Home](screenshots/Home/Profile_Image_Picker.png) |
 |------------------------------------|---------------------------------------|----------------------------------------------------|
+
+### Github Search
+
+| ![Github Search](screenshots/Github_Search/Github_Search_Result.jpg) | ![Github Search](screenshots/Github_Search/Github_Search_Detail.jpg) |
+|------------------------------------|---------------------------------------|
 
 ### Flutter Weather
 
