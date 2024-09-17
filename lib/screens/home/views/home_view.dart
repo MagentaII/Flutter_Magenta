@@ -6,6 +6,7 @@ import 'package:flutter_magenta/screens/github_search/views/github_search_view.d
 import 'package:flutter_magenta/screens/home/widgets/home_list_item.dart';
 
 import '../../../animation/animation.dart';
+import '../../music_player/view/playlist/playlist_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -131,7 +132,7 @@ class HomeBody extends StatelessWidget {
       {
         'text': 'GitHub Search',
         'image': Image.asset(
-          'assets/github_search_icon_1.png',
+          'assets/images/github_search_icon_1.png',
           fit: BoxFit.cover, // 讓圖片填充整個卡片
         ),
         'view': const GithubSearchView(),
@@ -139,10 +140,18 @@ class HomeBody extends StatelessWidget {
       {
         'text': 'Weather Search',
         'image': Image.asset(
-          'assets/weather_search_icon_1.png',
+          'assets/images/weather_search_icon_1.png',
           fit: BoxFit.cover, // 讓圖片填充整個卡片
         ),
         'view': const WeatherView(),
+      },
+      {
+        'text': 'Music Player',
+        'image': Image.asset(
+          'assets/images/music_player_icon_1.png',
+          fit: BoxFit.cover, // 讓圖片填充整個卡片
+        ),
+        'view': const PlaylistView(),
       },
       // 如果有新的項目，可以在這裡添加
       // {
@@ -170,7 +179,7 @@ class HomeBody extends StatelessWidget {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, // 設定列數為 2
                   crossAxisSpacing: 8.0, // 列與列之間的間距
-                  mainAxisSpacing: 8.0, // 行與行之間的間距
+                  mainAxisSpacing: 16.0, // 行與行之間的間距
                   childAspectRatio: 1.0, // 調整每個項目的寬高比
                 ),
                 itemCount: filteredItems.length,
