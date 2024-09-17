@@ -13,19 +13,19 @@ This project consolidates my previous simple Flutter apps into one application.
 ## Screenshots
 
 ### GitHub Search
-![Home](screenshots/Home/Apps.png)
-![Home](screenshots/Home/Profile.png)
-![Home](screenshots/Home/Profile_Image_Picker.png)
+<img src="screenshots/Home/Apps.png" width="300" alt="Home">
+<img src="screenshots/Home/Profile.png" width="300" alt="Home">
+<img src="screenshots/Home/Profile_Image_Picker.png" width="300" alt="Home">
 
 ### Flutter Weather
-![Weather Search](screenshots/Weather_Search/Weather_Search.png)
-![Weather Search](screenshots/Weather_Search/Weather_Search_result.png)
-![Weather Search](screenshots/Weather_Search/Weather_Search_ToggleCorF.png)
+<img src="screenshots/Weather_Search/Weather_Search.png" width="300" alt="Weather Search">
+<img src="screenshots/Weather_Search/Weather_Search_result.png" width="300" alt="Weather Search">
+<img src="screenshots/Weather_Search/Weather_Search_ToggleCorF.png" width="300" alt="Weather Search">
 
 ### Music Player
-![Music Player](screenshots/Music_Player/Music_Player_Playlist.png)
-![Music Player](screenshots/Music_Player/Music_Player_PauseSong.png)
-![Music Player](screenshots/Music_Player/Music_Player_PlaySong.png)
+<img src="screenshots/Music_Player/Music_Player_Playlist.png" width="300" alt="Music Player">
+<img src="screenshots/Music_Player/Music_Player_PauseSong.png" width="300" alt="Music Player">
+<img src="screenshots/Music_Player/Music_Player_PlaySong.png" width="300" alt="Music Player">
 
 ## Installation
 
